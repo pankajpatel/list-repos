@@ -1,8 +1,8 @@
 {
   "name": "list-repos",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "List all the repos, their HEADs and clean status in the Current Directory or the Supplied Directory",
-  "main": "index.js",
+  "main": "cli.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pankajpatel/list-repos.git"
@@ -14,7 +14,6 @@
   "bin": {
     "list-repos": "cli.js"
   },
-  "main": "cli.js",
   "author": "Pankaj Patel <patel.pankaj@live.in>",
   "license": "MIT",
   "bugs": {
