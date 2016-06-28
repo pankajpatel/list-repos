@@ -37,13 +37,15 @@ fs.readdir(cwd, function (err, files) {
         }
       }, function (err, res) {
         async.filter(res, function (stat, callback) {
-          if( fs.accessSync(path.join(cwd, stat.file, '.git'), fs.F_OK)){
-            callback(null, true)
-          } else {
-            callback(null, false)
-          }
+          fs.access(path.join(cwd, stat.file, '.git'), fs.F_OK, function(e) {
+            if( e ){
+              callback(null, false)
+            } else {
+              callback(null, true)
+            }
+          })
         }, function (err, res) {
-          if( err ){ console.log(err.code)}
+          if( err ){ }
           async.map(res, function (stat, callback) {
             try{
               var gitRepo = new git(path.join(cwd, stat.file))
@@ -57,8 +59,7 @@ fs.readdir(cwd, function (err, files) {
             }
           }, function (err, repoStats) {
             async.map(repoStats, function (status, callback) {
-              console.log([status.file, status.status])
-              table.push([status.file, status.status])
+              table.push([status.file, status.status.trim()])
               callback(null, status)
             }, function (err, res) {
               console.log( table.toString() )

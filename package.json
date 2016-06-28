@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "description": "List all the repos, their HEADs and clean status in the Current Directory or the Supplied Directory",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pankajpatel/list-repos.git"
@@ -14,6 +11,10 @@
     "git",
     "cli"
   ],
+  "bin": {
+    "list-repos": "cli.js"
+  },
+  "main": "cli.js",
   "author": "Pankaj Patel <patel.pankaj@live.in>",
   "license": "MIT",
   "bugs": {
@@ -24,8 +25,6 @@
     "async": "^2.0.0-rc.6",
     "chalk": "^1.1.3",
     "cli-table": "^0.3.1",
-    "git": "^0.1.5",
-    "promised-io": "^0.3.5",
     "simple-git": "^1.38.0"
   }
 }
