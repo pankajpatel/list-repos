@@ -61,7 +61,7 @@ fs.readdir(cwd, function (err, files) {
             }
           }, function (err, repoStats) {
             async.map(repoStats, function (status, callback) {
-              table.push([status.file, status.status.trim()])
+              table.push([chalk.cyan.bold(status.file), chalk.green(status.status.trim())])
               callback(null, status)
             }, function (err, res) {
               console.log( table.toString() )
