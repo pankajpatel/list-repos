@@ -6,6 +6,11 @@ var chalk = require('chalk');
 var Table = require('cli-table');
 var async = require('async');
 var git = require('simple-git');
+var Spinner = require('cli-spinner').Spinner;
+ 
+var spinner = new Spinner('%s');
+spinner.setSpinnerString(18);
+spinner.start();
 
 var table = new Table({
     head: ['Directory', 'Current Branch/NA']
@@ -64,6 +69,8 @@ fs.readdir(cwd, function (err, files) {
               table.push([chalk.cyan.bold(status.file), chalk.green(status.status.trim())])
               callback(null, status)
             }, function (err, res) {
+              spinner.stop();
+              process.stdout.clearLine();  // clear current text
               console.log( table.toString() )
             })
           });
