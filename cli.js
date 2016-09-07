@@ -13,7 +13,7 @@ var spinner = null;
 var table = null;
 var cwd = null;
 
-const debug = false;
+var debug = false;
 
 process.on('uncaughtException', (err) => {
   console.log(`Caught exception: ${err}`);
@@ -35,12 +35,12 @@ function init() {
 }
 
 function prettyPath(pathString) {
-  let p = pathString.split('/');
+  var p = pathString.split('/');
   return p[p.length - 1];
 }
-let fileIndex = 0;
+var fileIndex = 0;
 function processDirectory(stat, callback) {
-  let pathString = path.join(cwd, stat.file);
+  var pathString = path.join(cwd, stat.file);
   if( stat.stat.isDirectory() ){
     theGit.isGit(pathString, function(isGit){
       if(isGit){
@@ -52,7 +52,7 @@ function processDirectory(stat, callback) {
           if(debug) console.log(gitStatus)
         })
       } else {
-          let gitStatus = {branch: '-', issues: false};
+          var gitStatus = {branch: '-', issues: false};
           insert(pathString, gitStatus)
           callback(null, false)
           if(debug) console.log(fileIndex++, stat.file)
