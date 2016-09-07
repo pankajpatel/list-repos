@@ -5,76 +5,95 @@ var path = require('path');
 var chalk = require('chalk');
 var Table = require('cli-table');
 var async = require('async');
-var git = require('simple-git');
+
+var theGit = require('git-state');
 var Spinner = require('cli-spinner').Spinner;
- 
-var spinner = new Spinner('%s');
-spinner.setSpinnerString(18);
-spinner.start();
 
-var table = new Table({
-    head: ['Directory', 'Current Branch/NA']
-});
+var spinner = null;
+var table = null;
+var cwd = null;
 
-//either passed from CLI or take the current directory
-var cwd = process.argv[2] || process.cwd();
-
-console.log( chalk.green( cwd ) )
+const debug = false;
 
 process.on('uncaughtException', (err) => {
   console.log(`Caught exception: ${err}`);
 });
 
-fs.readdir(cwd, function (err, files) {
-    async.map(files, function (file, callback) {
-      fs.stat(path.join(cwd, file), function (err, stat) {
-        if(err) return callback(err);
-        callback( null, {
-          file: file,
-          stat: stat
-        })
-      })
-    }, function(err, results){
-      if(err) throw new Error(err);
-      async.filter(results, function (stat, callback) {
-        if( stat.stat.isDirectory() ){
-          callback(null, true)
-        } else {
-          callback(null, false)
-        }
-      }, function (err, res) {
-        async.filter(res, function (stat, callback) {
-          fs.access(path.join(cwd, stat.file, '.git'), fs.F_OK, function(e) {
-            if( e ){
-              callback(null, false)
-            } else {
-              callback(null, true)
-            }
-          })
-        }, function (err, res) {
-          if( err ){ }
-          async.map(res, function (stat, callback) {
-            try{
-              var gitRepo = new git(path.join(cwd, stat.file))
-              gitRepo.revparse( ['--abbrev-ref', 'HEAD'], function (e, status) {
-                stat.status = status;
-                callback(null, stat);
-              })
-            } catch(e){
-              stat.status = '-'
-              callback(null, stat)
-            }
-          }, function (err, repoStats) {
-            async.map(repoStats, function (status, callback) {
-              table.push([chalk.cyan.bold(status.file), chalk.green(status.status.trim())])
-              callback(null, status)
-            }, function (err, res) {
-              spinner.stop();
-              process.stdout.clearLine();  // clear current text
-              console.log( table.toString() )
-            })
-          });
-        })
-      })
-    });
+function init() {
+  //either passed from CLI or take the current directory
+  cwd = process.argv[2] || process.cwd();
+
+  //Spinners
+  spinner = new Spinner('%s');
+  spinner.setSpinnerString(18);
+  spinner.start();
+  
+  //Console Tables
+  table = new Table({
+    head: [chalk.cyan('Directory'), chalk.cyan('Current Branch/NA')]
   });
+}
+
+function prettyPath(pathString) {
+  let p = pathString.split('/');
+  return p[p.length - 1];
+}
+let fileIndex = 0;
+function processDirectory(stat, callback) {
+  let pathString = path.join(cwd, stat.file);
+  if( stat.stat.isDirectory() ){
+    theGit.isGit(pathString, function(isGit){
+      if(isGit){
+        theGit.check( pathString, function(e, gitStatus){
+          if(e) callback(e);
+          insert(pathString, gitStatus)
+          callback(null, true)
+          if(debug) console.log(fileIndex++, stat.file)
+          if(debug) console.log(gitStatus)
+        })
+      } else {
+          let gitStatus = {branch: '-', issues: false};
+          insert(pathString, gitStatus)
+          callback(null, false)
+          if(debug) console.log(fileIndex++, stat.file)
+          if(debug) console.log(gitStatus)
+      }
+    })
+  } else {
+    if(debug) console.log(fileIndex++, stat.file)
+    if(debug) console.log(false)
+    callback(null, false)
+  }
+}
+
+function insert(pathString, status){
+  table.push([prettyPath(pathString), status.issues ? chalk.red(status.branch) : chalk.green(status.branch)]);
+}
+
+function finish(){
+  spinner.stop();
+  console.log( table.toString() );
+}
+
+init();
+console.log( chalk.green( cwd ) )
+
+// processDirectory(cwd)
+
+fs.readdir(cwd, function (err, files) {
+  async.map(files, function (file, statCallback) {
+    fs.stat(path.join(cwd, file), function (err, stat) {
+      if(err) return statCallback(err);
+      statCallback( null, {
+        file: file,
+        stat: stat
+      })
+    })
+  }, function(err, statuses){
+    if(err) throw new Error(err);
+    if(debug) console.log(statuses.length);
+    async.filter(statuses, processDirectory, function () {
+      finish();
+    })
+  })
+});
