@@ -30,7 +30,14 @@ function init() {
   
   //Console Tables
   table = new Table({
-    head: [chalk.cyan('Directory'), chalk.cyan('Current Branch/NA')]
+    head: [
+      chalk.cyan('Directory'), 
+      chalk.cyan('Current Branch/NA'), 
+      chalk.cyan('Ahead'), 
+      chalk.cyan('Dirty'), 
+      chalk.cyan('Untracked'), 
+      chalk.cyan('Stashes')
+    ]
   });
 }
 
@@ -67,7 +74,21 @@ function processDirectory(stat, callback) {
 }
 
 function insert(pathString, status){
-  table.push([prettyPath(pathString), status.issues ? chalk.red(status.branch) : chalk.green(status.branch)]);
+  var method = status.dirty === 0
+        ? status.ahead === 0
+          ? status.untracked === 0
+            ? chalk.grey
+            : chalk.yellow
+          : chalk.green
+        : chalk.red
+  table.push([
+      prettyPath(pathString), 
+      method( status.branch !== undefined && status.branch !== null ? status.branch : '-' ),
+      method( status.ahead !== undefined && status.ahead !== null ? status.ahead : '-' ),
+      method( status.dirty !== undefined && status.dirty !== null ? status.dirty : '-' ),
+      method( status.untracked !== undefined && status.untracked !== null ? status.untracked : '-' ),
+      method( status.stashes !== undefined && status.stashes !== null ? status.stashes : '-' )
+    ]);
 }
 
 function finish(){
