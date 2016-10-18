@@ -9,6 +9,9 @@ var async = require('async');
 var theGit = require('git-state');
 var Spinner = require('cli-spinner').Spinner;
 
+var argv = require('minimist')(process.argv.slice(2))
+var dirs = argv._.length ? argv._ : [process.cwd()]
+
 var spinner = null;
 var table = null;
 var cwd = null;
@@ -21,7 +24,7 @@ process.on('uncaughtException', (err) => {
 
 function init() {
   //either passed from CLI or take the current directory
-  cwd = process.argv[2] || process.cwd();
+  cwd = dirs[0]
 
   //Spinners
   spinner = new Spinner('%s');
@@ -93,6 +96,8 @@ function insert(pathString, status){
 
 function finish(){
   spinner.stop();
+  process.stdout.clearLine();  // clear current text
+  process.stdout.cursorTo(0);  // move cursor to beginning of line
   console.log( table.toString() );
 }
 
