@@ -5,6 +5,7 @@ var path = require('path');
 var chalk = require('chalk');
 var Table = require('cli-table');
 var async = require('async');
+var package = require('./package')
 
 var theGit = require('git-state');
 var Spinner = require('cli-spinner').Spinner;
@@ -21,6 +22,40 @@ var debug = false;
 process.on('uncaughtException', (err) => {
   console.log(`Caught exception: ${err}`);
 });
+
+
+if (argv.version || argv.v) {
+  version()
+  process.exit()
+}
+
+if (argv.help || argv.h) {
+  help()
+  process.exit()
+}
+
+
+function version () {
+  console.log(package.version)
+  process.exit()
+}
+
+function help () {
+  console.log(
+    package.name + ' ' + package.version + '\n' +
+    package.description + '\n\n' +
+    'Usage:\n' +
+    '  ' + package.name + ' [paths] [options]\n\n' +
+    'The paths defaults to the current direcotry if not specified.\n\n' +
+    'Options:\n' +
+    '  --help, -h     show this help\n' +
+    '  --version, -v  show version\n' +
+    '  --compact, -c  output compact table\n' +
+    '  --gitonly, -g  output only git repos\n' +
+    '  --simple       make the output more simple for easy grepping'
+  )
+  process.exit()
+}
 
 function init() {
   //either passed from CLI or take the current directory
@@ -63,7 +98,9 @@ function processDirectory(stat, callback) {
         })
       } else {
           var gitStatus = {branch: '-', issues: false};
-          insert(pathString, gitStatus)
+          if( !(argv.gitonly || argv.g) ) {
+            insert(pathString, gitStatus)
+          }
           callback(null, false)
           if(debug) console.log(fileIndex++, stat.file)
           if(debug) console.log(gitStatus)
