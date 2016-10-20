@@ -6,6 +6,12 @@ var chalk = require('chalk');
 var Table = require('cli-table');
 var async = require('async');
 var package = require('./package')
+var updateNotifier = require('update-notifier');
+
+updateNotifier({
+    pkg: package,
+    updateCheckInterval: 1000 * 60 * 60 * 24 * 2 // 2 days
+  }).notify();
 
 var theGit = require('git-state');
 var Spinner = require('cli-spinner').Spinner;
@@ -71,7 +77,7 @@ function init() {
   tableOpts = {
     head: [
       chalk.cyan('Directory'), 
-      chalk.cyan('Current Branch/NA'), 
+      chalk.cyan('Branch'), 
       chalk.cyan('Ahead'), 
       chalk.cyan('Dirty'), 
       chalk.cyan('Untracked'), 
