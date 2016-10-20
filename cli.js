@@ -67,7 +67,8 @@ function init() {
   spinner.start();
   
   //Console Tables
-  table = new Table({
+  var tableOpts = {};
+  tableOpts = {
     head: [
       chalk.cyan('Directory'), 
       chalk.cyan('Current Branch/NA'), 
@@ -76,7 +77,11 @@ function init() {
       chalk.cyan('Untracked'), 
       chalk.cyan('Stashes')
     ]
-  });
+  };
+  if (argv.compact || argv.c) {
+    tableOpts.chars = {'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''}
+  };
+  table = new Table(tableOpts);
 }
 
 function prettyPath(pathString) {
