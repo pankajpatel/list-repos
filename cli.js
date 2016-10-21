@@ -6,29 +6,34 @@ var chalk = require('chalk');
 var Table = require('cli-table');
 var async = require('async');
 var package = require('./package')
+var C = require('./constants');
 var updateNotifier = require('update-notifier');
-
-updateNotifier({
-    pkg: package,
-    updateCheckInterval: 1000 * 60 * 60 * 24 * 2 // 2 days
-  }).notify();
 
 var theGit = require('git-state');
 var Spinner = require('cli-spinner').Spinner;
-
 var argv = require('minimist')(process.argv.slice(2))
-var dirs = argv._.length ? argv._ : [process.cwd()]
 
 var spinner = null;
 var table = null;
 var cwd = null;
-
 var debug = false;
+var fileIndex = 0;
+
+var showGitOnly = argv.gitonly || argv.g;
+var dirs = argv._.length ? argv._ : [process.cwd()]
+
+updateNotifier({
+  pkg: package,
+  updateCheckInterval: 1000 * 60 * 60 * 24 * C.updateInterval
+}).notify();
+
+if (argv.debug) {
+  debug = true;
+}
 
 process.on('uncaughtException', (err) => {
   console.log(`Caught exception: ${err}`);
 });
-
 
 if (argv.version || argv.v) {
   version()
@@ -39,7 +44,6 @@ if (argv.help || argv.h) {
   help()
   process.exit()
 }
-
 
 function version () {
   console.log(package.version)
@@ -71,57 +75,67 @@ function init() {
   spinner = new Spinner('%s');
   spinner.setSpinnerString(18);
   spinner.start();
-  
+
   //Console Tables
   var tableOpts = {};
   tableOpts = {
     head: [
-      chalk.cyan('Directory'), 
-      chalk.cyan('Branch'), 
-      chalk.cyan('Ahead'), 
-      chalk.cyan('Dirty'), 
-      chalk.cyan('Untracked'), 
-      chalk.cyan('Stashes')
+      chalk.cyan(C.headers.directory.long),
+      chalk.cyan(C.headers.branch.long),
+      chalk.cyan(C.headers.ahead.long),
+      chalk.cyan(C.headers.dirty.long),
+      chalk.cyan(C.headers.untracked.long),
+      chalk.cyan(C.headers.stashes.long)
     ]
   };
   if (argv.compact || argv.c) {
+    if( argv.compact == 's' || argv.c == 's'){
+      tableOpts.head = [
+        chalk.cyan(C.headers.directory.short),
+        chalk.cyan(C.headers.branch.short),
+        chalk.cyan(C.headers.ahead.short),
+        chalk.cyan(C.headers.dirty.short),
+        chalk.cyan(C.headers.untracked.short),
+        chalk.cyan(C.headers.stashes.short)
+      ];
+    }
     tableOpts.chars = {'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''}
   };
   table = new Table(tableOpts);
 }
 
 function prettyPath(pathString) {
-  var p = pathString.split('/');
+  var p = pathString.split(path.sep);
   return p[p.length - 1];
 }
-var fileIndex = 0;
+
 function processDirectory(stat, callback) {
   var pathString = path.join(cwd, stat.file);
   if( stat.stat.isDirectory() ){
+    if(debug) console.log(fileIndex, stat.file)
     theGit.isGit(pathString, function(isGit){
       if(isGit){
         theGit.check( pathString, function(e, gitStatus){
           if(e) callback(e);
+          gitStatus.git = true;
+          if(debug) console.log(stat.file, gitStatus)
           insert(pathString, gitStatus)
           callback(null, true)
-          if(debug) console.log(fileIndex++, stat.file)
-          if(debug) console.log(gitStatus)
         })
       } else {
-          var gitStatus = {branch: '-', issues: false};
-          if( !(argv.gitonly || argv.g) ) {
+          var gitStatus = {branch: '-', issues: false, git: false};
+          if(debug) console.log(stat.file, gitStatus)
+          if( !showGitOnly ) {
             insert(pathString, gitStatus)
           }
           callback(null, false)
-          if(debug) console.log(fileIndex++, stat.file)
-          if(debug) console.log(gitStatus)
       }
     })
   } else {
-    if(debug) console.log(fileIndex++, stat.file)
-    if(debug) console.log(false)
+    if(debug) console.log(stat.file, false)
     callback(null, false)
   }
+  fileIndex++;
 }
 
 function insert(pathString, status){
@@ -133,7 +147,7 @@ function insert(pathString, status){
           : chalk.green
         : chalk.red
   table.push([
-      prettyPath(pathString), 
+      prettyPath(pathString),
       method( status.branch !== undefined && status.branch !== null ? status.branch : '-' ),
       method( status.ahead !== undefined && status.ahead !== null ? status.ahead : '-' ),
       method( status.dirty !== undefined && status.dirty !== null ? status.dirty : '-' ),
