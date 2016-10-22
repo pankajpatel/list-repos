@@ -139,21 +139,27 @@ function processDirectory(stat, callback) {
 }
 
 function insert(pathString, status){
-  var method = status.dirty === 0
+  var methodName = status.dirty === 0
         ? status.ahead === 0
           ? status.untracked === 0
-            ? chalk.grey
-            : chalk.yellow
-          : chalk.green
-        : chalk.red
-  table.push([
-      prettyPath(pathString),
-      method( status.branch !== undefined && status.branch !== null ? status.branch : '-' ),
-      method( status.ahead !== undefined && status.ahead !== null ? status.ahead : '-' ),
-      method( status.dirty !== undefined && status.dirty !== null ? status.dirty : '-' ),
-      method( status.untracked !== undefined && status.untracked !== null ? status.untracked : '-' ),
-      method( status.stashes !== undefined && status.stashes !== null ? status.stashes : '-' )
-    ]);
+            ? 'grey'
+            : 'yellow'
+          : 'green'
+        : 'red'
+
+  if( (argv.attention || argv.a) && (methodName == 'grey') ){
+
+  } else {
+    var method = chalk[methodName];
+    table.push([
+        prettyPath(pathString),
+        method( status.branch !== undefined && status.branch !== null ? status.branch : '-' ),
+        method( status.ahead !== undefined && status.ahead !== null ? status.ahead : '-' ),
+        method( status.dirty !== undefined && status.dirty !== null ? status.dirty : '-' ),
+        method( status.untracked !== undefined && status.untracked !== null ? status.untracked : '-' ),
+        method( status.stashes !== undefined && status.stashes !== null ? status.stashes : '-' )
+      ]);
+  }
 }
 
 function finish(){
@@ -161,6 +167,18 @@ function finish(){
   process.stdout.clearLine();  // clear current text
   process.stdout.cursorTo(0);  // move cursor to beginning of line
   console.log( table.toString() );
+  if (argv.compact || argv.c) {
+    if( argv.compact == 's' || argv.c == 's' || argv.compact == 'so' || argv.c == 'so'){
+      var str = [];
+      Object.keys(C.headers).map(function(key){
+        var header = C.headers[key];
+        str.push(chalk.cyan(header.short) + ': ' + header.long)
+      })
+      if( argv.compact == 'so' || argv.c == 'so'){
+        console.log(str.join(', ') + '\n')
+      }
+    }
+  }
 }
 
 init();
