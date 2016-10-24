@@ -18,6 +18,7 @@ var table = null;
 var cwd = null;
 var debug = false;
 var fileIndex = 0;
+var statuses = [];
 
 var showGitOnly = argv.gitonly || argv.g;
 var dirs = argv._.length ? argv._ : [process.cwd()]
@@ -55,14 +56,20 @@ function help () {
     package.name + ' ' + package.version + '\n' +
     package.description + '\n\n' +
     'Usage:\n' +
-    '  ' + package.name + ' [paths] [options]\n\n' +
-    'The paths defaults to the current direcotry if not specified.\n\n' +
+    '  ' + package.name + ' [path] [options]\n\n' +
+    'The path defaults to the current direcotry if not specified.\n\n' +
     'Options:\n' +
-    '  --help, -h     show this help\n' +
-    '  --version, -v  show version\n' +
-    '  --compact, -c  output compact table\n' +
-    '  --gitonly, -g  output only git repos\n' +
-    '  --simple       make the output more simple for easy grepping'
+    '  --help, -h           show this help\n' +
+    '  --version, -v        show version\n' +
+    '  --compact, -c        output compact table\n' +
+    '  --compact=s, -c=s    output compact table with short headers\n' +
+    '                       with headers described in bottom of table\n' +
+    '  --compact=so, -c=so  output compact table with short headers\n' +
+    '                       and no description of headers\n' +
+    '  --gitonly, -g        output only git repos\n' +
+    '  --attention, -a      output only dirs which requires attention\n' +
+    '                       also includes non git dirs, use -g to omit them\n' +
+    '  --simple, -s         make the output more simple for easy grepping'
   )
   process.exit()
 }
@@ -89,7 +96,7 @@ function init() {
     ]
   };
   if (argv.compact || argv.c) {
-    if( argv.compact == 's' || argv.c == 's'){
+    if( argv.compact == 's' || argv.c == 's' || argv.compact == 'so' || argv.c == 'so'){
       tableOpts.head = [
         chalk.cyan(C.headers.directory.short),
         chalk.cyan(C.headers.branch.short),
@@ -123,7 +130,7 @@ function processDirectory(stat, callback) {
           callback(null, true)
         })
       } else {
-          var gitStatus = {branch: '-', issues: false, git: false};
+          var gitStatus = {branch: '-', issues: '-', git: false, untracked: '-', ahead: '-', stashes: '-', dirty: '-'};
           if(debug) console.log(stat.file, gitStatus)
           if( !showGitOnly ) {
             insert(pathString, gitStatus)
@@ -139,6 +146,9 @@ function processDirectory(stat, callback) {
 }
 
 function insert(pathString, status){
+  var directoryName = prettyPath( pathString );
+  status.directory = directoryName;
+  statuses.push(status)
   var methodName = status.dirty === 0
         ? status.ahead === 0
           ? status.untracked === 0
@@ -152,7 +162,7 @@ function insert(pathString, status){
   } else {
     var method = chalk[methodName];
     table.push([
-        prettyPath(pathString),
+        directoryName,
         method( status.branch !== undefined && status.branch !== null ? status.branch : '-' ),
         method( status.ahead !== undefined && status.ahead !== null ? status.ahead : '-' ),
         method( status.dirty !== undefined && status.dirty !== null ? status.dirty : '-' ),
@@ -162,11 +172,34 @@ function insert(pathString, status){
   }
 }
 
+function simpleStatus(status){
+  //simple comma and newline separated output for machine readability
+  var str = [];
+  for (var i = 0; i < C.simple.length; i++) {
+    str.push(status[C.simple[i]])
+  }
+  console.log(str.join(','))
+}
+
+function simple(){
+  for (var i = 0; i < statuses.length; i++) {
+    simpleStatus(statuses[i])
+  }
+}
+
 function finish(){
   spinner.stop();
   process.stdout.clearLine();  // clear current text
   process.stdout.cursorTo(0);  // move cursor to beginning of line
-  console.log( table.toString() );
+  if (argv.simple || argv.s) {
+    simple();
+  } else {
+    if (!chalk.supportsColor) {
+      console.log( chalk.stripColor( table.toString() ) );
+    } else {
+      console.log( table.toString() );
+    }
+  }
   if (argv.compact || argv.c) {
     if( argv.compact == 's' || argv.c == 's' || argv.compact == 'so' || argv.c == 'so'){
       var str = [];
@@ -174,7 +207,7 @@ function finish(){
         var header = C.headers[key];
         str.push(chalk.cyan(header.short) + ': ' + header.long)
       })
-      if( argv.compact == 'so' || argv.c == 'so'){
+      if( !(argv.compact == 'so' || argv.c == 'so') ){
         console.log(str.join(', ') + '\n')
       }
     }

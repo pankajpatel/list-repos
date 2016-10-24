@@ -25,5 +25,13 @@ module.exports = {
       long: 'Stashes',
       short: 'S'
     },
-  }
+  },
+  simple: [
+    'directory',
+    'branch',
+    'ahead',
+    'dirty',
+    'untracked',
+    'stashes'
+  ]
 }

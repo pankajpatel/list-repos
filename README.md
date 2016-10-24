@@ -6,9 +6,9 @@ Read more at [http://time2hack.com/2016/10/introducing-list-repos.html](http://t
 
 To install the utility, simply do
 ```
-sudo npm install -g list-repos
+npm install -g list-repos
 ```
-And in few seconds(or minutes), it should be installed after you enter the password for `sudo`.
+And in few seconds(or minutes), it should be installed. If it gives error of Access rights, try with `sudo` and after you enter the password for `sudo`, it should install normally.
 
 To use the utility, type following on CLI,
 ```
@@ -17,55 +17,59 @@ list-repos ../
 ```
 
 And will comeup with this output:
-```
-../
-┌──────────────┬───────────────────┬───────┬───────┬───────────┬─────────┐
-│ Directory    │ Current Branch/NA │ Ahead │ Dirty │ Untracked │ Stashes │
-├──────────────┼───────────────────┼───────┼───────┼───────────┼─────────┤
-│ ci           │ -                 │ -     │ -     │ -         │ -       │
-├──────────────┼───────────────────┼───────┼───────┼───────────┼─────────┤
-│ code-status  │ master            │ 0     │ 0     │ 0         │ -       │
-├──────────────┼───────────────────┼───────┼───────┼───────────┼─────────┤
-│ get-it-ready │ master            │ 0     │ 0     │ 0         │ -       │
-├──────────────┼───────────────────┼───────┼───────┼───────────┼─────────┤
-│ list-repos   │ master            │ 0     │ 1     │ 0         │ -       │
-└──────────────┴───────────────────┴───────┴───────┴───────────┴─────────┘
-```
 
-There are several other options for output
+![list-repos](https://dl.dropboxusercontent.com/u/45270860/list-repos.png)
 
-```
-# Show only git repos, omit not git directories; --gitonly
-list-repos ../ -g
-```
+There are several other options for output like:
 
-And will comeup with this output:
-```
-../
-┌──────────────┬───────────────────┬───────┬───────┬───────────┬─────────┐
-│ Directory    │ Current Branch/NA │ Ahead │ Dirty │ Untracked │ Stashes │
-├──────────────┼───────────────────┼───────┼───────┼───────────┼─────────┤
-│ code-status  │ master            │ 0     │ 0     │ 0         │ -       │
-├──────────────┼───────────────────┼───────┼───────┼───────────┼─────────┤
-│ get-it-ready │ master            │ 0     │ 0     │ 0         │ -       │
-├──────────────┼───────────────────┼───────┼───────┼───────────┼─────────┤
-│ list-repos   │ master            │ 0     │ 1     │ 0         │ -       │
-└──────────────┴───────────────────┴───────┴───────┴───────────┴─────────┘
-```
+- `--git-only` || `-g` 
 
-```
-# Show compact output; you can mix it with -g as well by typing -cg; --compact
-list-repos ../ -c
-```
+  Show only git repos
 
-And will comeup with this output:
-```
-../
-┌──────────────┬───────────────────┬───────┬───────┬───────────┬─────────┐
-│ Directory    │ Current Branch/NA │ Ahead │ Dirty │ Untracked │ Stashes │
-│ ci           │ -                 │ -     │ -     │ -         │ -       │
-│ code-status  │ master            │ 0     │ 0     │ 0         │ -       │
-│ get-it-ready │ master            │ 0     │ 0     │ 0         │ -       │
-│ list-repos   │ master            │ 0     │ 1     │ 0         │ -       │
-└──────────────┴───────────────────┴───────┴───────┴───────────┴─────────┘
-```
+  ![list-repos -g](https://dl.dropboxusercontent.com/u/45270860/list-repos-g.png)
+
+- `--attention` || `-a`
+
+  Show all directories which requires attention, includes non-git
+
+  ![list-repos -a](https://dl.dropboxusercontent.com/u/45270860/list-repos-a.png)
+
+- `--attention --git-only` || `-ag`
+
+  Show all git repos which requires attention
+
+  ![list-repos -ag](https://dl.dropboxusercontent.com/u/45270860/list-repos-ag.png)
+
+- `--compact` || `-c`
+
+  Show compact table output
+
+  ![list-repos -c](https://dl.dropboxusercontent.com/u/45270860/list-repos-c.png)
+
+- `--compact=s` || `-c=s`
+
+  Show compact table output and short table headers and header description at the bottom
+
+  ![list-repos -c=s](https://dl.dropboxusercontent.com/u/45270860/list-repos-c%3Ds.png)
+
+- `--compact=so` || `-c=so`
+
+  Show compact table output and short table headers and no header description at the bottom
+
+  ![list-repos -c=so](https://dl.dropboxusercontent.com/u/45270860/list-repos-c%3Dso.png)
+
+- `--simple` || `-s`
+
+  Show simple comma and new line separated output; 
+
+  order of values is `dir`, `branch`, `ahead`, `dirty`, `untracked`, `stashes`
+
+  ![list-repos -s](https://dl.dropboxusercontent.com/u/45270860/list-repos-s.png)
+
+- `--help` || `-h`
+
+  Show help
+
+- `--version` || `-v`
+
+  Show version of the utility
