@@ -24,7 +24,7 @@ module.exports = {
     stashes: {
       long: 'Stashes',
       short: 'S'
-    },
+    }
   },
   simple: [
     'directory',

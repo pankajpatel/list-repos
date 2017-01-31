@@ -4,8 +4,8 @@ var fs = require("fs");
 var path = require('path');
 var chalk = require('chalk');
 var Table = require('cli-table');
-var async = require('async');
-var package = require('./package')
+var _async = require('async');
+var pkg = require('./package')
 var C = require('./constants');
 var updateNotifier = require('update-notifier');
 
@@ -24,7 +24,7 @@ var showGitOnly = argv.gitonly || argv.g;
 var dirs = argv._.length ? argv._ : [process.cwd()]
 
 updateNotifier({
-  pkg: package,
+  pkg: pkg,
   updateCheckInterval: 1000 * 60 * 60 * 24 * C.updateInterval
 }).notify();
 
@@ -53,10 +53,10 @@ function version () {
 
 function help () {
   console.log(
-    package.name + ' ' + package.version + '\n' +
-    package.description + '\n\n' +
+    pkg.name + ' ' + pkg.version + '\n' +
+    pkg.description + '\n\n' +
     'Usage:\n' +
-    '  ' + package.name + ' [path] [options]\n\n' +
+    '  ' + pkg.name + ' [path] [options]\n\n' +
     'The path defaults to the current direcotry if not specified.\n\n' +
     'Options:\n' +
     '  --help, -h           show this help\n' +
@@ -74,6 +74,20 @@ function help () {
   process.exit()
 }
 
+function getTableHeader(type, color) {
+  if(!color) {
+    color = 'cyan';
+  }
+  return [
+    chalk[color](C.headers.directory[type]),
+    chalk[color](C.headers.branch[type]),
+    chalk[color](C.headers.ahead[type]),
+    chalk[color](C.headers.dirty[type]),
+    chalk[color](C.headers.untracked[type]),
+    chalk[color](C.headers.stashes[type])
+  ]
+}
+
 function init() {
   //either passed from CLI or take the current directory
   cwd = dirs[0]
@@ -86,25 +100,11 @@ function init() {
   //Console Tables
   var tableOpts = {};
   tableOpts = {
-    head: [
-      chalk.cyan(C.headers.directory.long),
-      chalk.cyan(C.headers.branch.long),
-      chalk.cyan(C.headers.ahead.long),
-      chalk.cyan(C.headers.dirty.long),
-      chalk.cyan(C.headers.untracked.long),
-      chalk.cyan(C.headers.stashes.long)
-    ]
+    head: getTableHeader('long')
   };
   if (argv.compact || argv.c) {
     if( argv.compact == 's' || argv.c == 's' || argv.compact == 'so' || argv.c == 'so'){
-      tableOpts.head = [
-        chalk.cyan(C.headers.directory.short),
-        chalk.cyan(C.headers.branch.short),
-        chalk.cyan(C.headers.ahead.short),
-        chalk.cyan(C.headers.dirty.short),
-        chalk.cyan(C.headers.untracked.short),
-        chalk.cyan(C.headers.stashes.short)
-      ];
+      tableOpts.head = getTableHeader('short');
     }
     tableOpts.chars = {'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''}
   };
@@ -220,7 +220,7 @@ console.log( chalk.green( cwd ) )
 // processDirectory(cwd)
 
 fs.readdir(cwd, function (err, files) {
-  async.map(files, function (file, statCallback) {
+  _async.map(files, function (file, statCallback) {
     fs.stat(path.join(cwd, file), function (err, stat) {
       if(err) return statCallback(err);
       statCallback( null, {
@@ -231,7 +231,7 @@ fs.readdir(cwd, function (err, files) {
   }, function(err, statuses){
     if(err) throw new Error(err);
     if(debug) console.log(statuses.length);
-    async.filter(statuses, processDirectory, function () {
+    _async.filter(statuses, processDirectory, function () {
       finish();
     })
   })
