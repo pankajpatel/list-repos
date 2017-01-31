@@ -1,5 +1,7 @@
 # List Repos (list-repos)
 
+[![Code Climate](https://codeclimate.com/github/pankajpatel/list-repos/badges/gpa.svg)](https://codeclimate.com/github/pankajpatel/list-repos) [![Issue Count](https://codeclimate.com/github/pankajpatel/list-repos/badges/issue_count.svg)](https://codeclimate.com/github/pankajpatel/list-repos) [![Test Coverage](https://codeclimate.com/github/pankajpatel/list-repos/badges/coverage.svg)](https://codeclimate.com/github/pankajpatel/list-repos/coverage)
+
 This utility lists the current active branch on repos present in specified directory. By default it takes the current directory
 
 Read more at [http://time2hack.com/2016/10/introducing-list-repos.html](http://time2hack.com/2016/10/introducing-list-repos.html)
@@ -22,54 +24,54 @@ And will comeup with this output:
 
 There are several other options for output like:
 
-- `--git-only` || `-g` 
+- `--git-only` or `-g`
 
-  Show only git repos
+Show only git repos
 
-  ![list-repos -g](https://dl.dropboxusercontent.com/u/45270860/list-repos-g.png)
+![list-repos -g](https://dl.dropboxusercontent.com/u/45270860/list-repos-g.png)
 
-- `--attention` || `-a`
+- `--attention` or `-a`
 
-  Show all directories which requires attention, includes non-git
+Show all directories which requires attention, includes non-git
 
-  ![list-repos -a](https://dl.dropboxusercontent.com/u/45270860/list-repos-a.png)
+![list-repos -a](https://dl.dropboxusercontent.com/u/45270860/list-repos-a.png)
 
-- `--attention --git-only` || `-ag`
+- `--attention --git-only` or `-ag`
 
-  Show all git repos which requires attention
+Show all git repos which requires attention
 
-  ![list-repos -ag](https://dl.dropboxusercontent.com/u/45270860/list-repos-ag.png)
+![list-repos -ag](https://dl.dropboxusercontent.com/u/45270860/list-repos-ag.png)
 
-- `--compact` || `-c`
+- `--compact` or `-c`
 
-  Show compact table output
+Show compact table output
 
-  ![list-repos -c](https://dl.dropboxusercontent.com/u/45270860/list-repos-c.png)
+![list-repos -c](https://dl.dropboxusercontent.com/u/45270860/list-repos-c.png)
 
-- `--compact=s` || `-c=s`
+- `--compact=s` or `-c=s`
 
-  Show compact table output and short table headers and header description at the bottom
+Show compact table output and short table headers and header description at the bottom
 
-  ![list-repos -c=s](https://dl.dropboxusercontent.com/u/45270860/list-repos-c%3Ds.png)
+![list-repos -c=s](https://dl.dropboxusercontent.com/u/45270860/list-repos-c%3Ds.png)
 
-- `--compact=so` || `-c=so`
+- `--compact=so` or `-c=so`
 
-  Show compact table output and short table headers and no header description at the bottom
+Show compact table output and short table headers and no header description at the bottom
 
-  ![list-repos -c=so](https://dl.dropboxusercontent.com/u/45270860/list-repos-c%3Dso.png)
+![list-repos -c=so](https://dl.dropboxusercontent.com/u/45270860/list-repos-c%3Dso.png)
 
-- `--simple` || `-s`
+- `--simple` or `-s`
 
-  Show simple comma and new line separated output; 
+Show simple comma and new line separated output;
 
-  order of values is `dir`, `branch`, `ahead`, `dirty`, `untracked`, `stashes`
+order of values is `dir`, `branch`, `ahead`, `dirty`, `untracked`, `stashes`
 
-  ![list-repos -s](https://dl.dropboxusercontent.com/u/45270860/list-repos-s.png)
+![list-repos -s](https://dl.dropboxusercontent.com/u/45270860/list-repos-s.png)
 
-- `--help` || `-h`
+- `--help` or `-h`
 
-  Show help
+Show help
 
-- `--version` || `-v`
+- `--version` or `-v`
 
-  Show version of the utility
+Show version of the utility
