@@ -63,11 +63,11 @@ function version () {
 }
 
 function hasAskedForCompact () {
-  return !!compact && compact === 's';
+  return compact && compact === 's';
 }
 
 function hasAskedForVeryCompact () {
-  return !!compact && compact === 'so';
+  return compact && compact === 'so';
 }
 
 function help () {
@@ -121,12 +121,12 @@ function init() {
   tableOpts = {
     head: getTableHeader('long')
   };
-  if ( !!compact ) {
+  if ( compact ) {
     if( hasAskedForCompact() || hasAskedForVeryCompact() ){
       tableOpts.head = getTableHeader('short');
     }
     tableOpts.chars = {'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''}
-  };
+  }
   table = new Table(tableOpts);
 }
 
@@ -136,17 +136,18 @@ function prettyPath(pathString) {
 }
 
 function processDirectory(stat, callback) {
+  fileIndex++;
   var pathString = path.join(cwd, stat.file);
   if( stat.stat.isDirectory() ){
     if(debug) console.log(fileIndex, stat.file)
     theGit.isGit(pathString, function(isGit){
       if(isGit){
         theGit.check( pathString, function(e, gitStatus){
-          if(e) callback(e);
+          if(e) return callback(e);
           gitStatus.git = true;
           if(debug) console.log(stat.file, gitStatus)
           insert(pathString, gitStatus)
-          callback(null, true)
+          return callback(null, true)
         })
       } else {
           var gitStatus = {branch: '-', issues: '-', git: false, untracked: '-', ahead: '-', stashes: '-', dirty: '-'};
@@ -154,14 +155,13 @@ function processDirectory(stat, callback) {
           if( !showGitOnly ) {
             insert(pathString, gitStatus)
           }
-          callback(null, false)
+          return callback(null, false)
       }
     })
   } else {
     if(debug) console.log(stat.file, false)
-    callback(null, false)
+    return callback(null, false)
   }
-  fileIndex++;
 }
 
 function insert(pathString, status){
@@ -176,19 +176,20 @@ function insert(pathString, status){
           : 'green'
         : 'red'
 
-  if( (argv.attention || argv.a) && (methodName == 'grey') ){
-
-  } else {
-    var method = chalk[methodName];
+  if( !( (argv.attention || argv.a) && (methodName === 'grey') )){
     table.push([
         directoryName,
-        method( status.branch !== undefined && status.branch !== null ? status.branch : '-' ),
-        method( status.ahead !== undefined && status.ahead !== null ? status.ahead : '-' ),
-        method( status.dirty !== undefined && status.dirty !== null ? status.dirty : '-' ),
-        method( status.untracked !== undefined && status.untracked !== null ? status.untracked : '-' ),
-        method( status.stashes !== undefined && status.stashes !== null ? status.stashes : '-' )
+        checkAndGetEmptyString(status, 'branch', methodName),
+        checkAndGetEmptyString(status, 'ahead', methodName),
+        checkAndGetEmptyString(status, 'dirty', methodName),
+        checkAndGetEmptyString(status, 'untracked', methodName),
+        checkAndGetEmptyString(status, 'stashes', methodName)
       ]);
   }
+}
+
+function checkAndGetEmptyString(status, key, methodName){
+  return chalk[methodName](status[key] !== undefined && status[key] !== null ? status[key] : '-');
 }
 
 function simpleStatus(status){
@@ -219,7 +220,7 @@ function finish(){
       console.log( table.toString() );
     }
   }
-  if ( !!compact ){
+  if ( compact ){
     var str = [];
     Object.keys(C.headers).map(function(key){
       var header = C.headers[key];
@@ -238,6 +239,9 @@ console.log( chalk.green( cwd ) )
 // processDirectory(cwd)
 
 fs.readdir(cwd, function (err, files) {
+  if(err){
+    throw err;
+  }
   _async.map(files, function (file, statCallback) {
     fs.stat(path.join(cwd, file), function (err, stat) {
       if(err) return statCallback(err);
