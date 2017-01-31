@@ -19,6 +19,7 @@ var cwd = null;
 var debug = false;
 var fileIndex = 0;
 var statuses = [];
+var compact = null;
 
 var showGitOnly = argv.gitonly || argv.g;
 var dirs = argv._.length ? argv._ : [process.cwd()]
@@ -46,9 +47,27 @@ if (argv.help || argv.h) {
   process.exit()
 }
 
+if (argv.compact) {
+  compact = argv.compact;
+}
+else if (argv.c) {
+  compact = argv.c;
+}
+else {
+  compact = false;
+}
+
 function version () {
-  console.log(package.version)
+  console.log(pkg.version)
   process.exit()
+}
+
+function hasAskedForCompact () {
+  return !!compact && compact === 's';
+}
+
+function hasAskedForVeryCompact () {
+  return !!compact && compact === 'so';
 }
 
 function help () {
@@ -102,8 +121,8 @@ function init() {
   tableOpts = {
     head: getTableHeader('long')
   };
-  if (argv.compact || argv.c) {
-    if( argv.compact == 's' || argv.c == 's' || argv.compact == 'so' || argv.c == 'so'){
+  if ( !!compact ) {
+    if( hasAskedForCompact() || hasAskedForVeryCompact() ){
       tableOpts.head = getTableHeader('short');
     }
     tableOpts.chars = {'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''}
@@ -200,17 +219,16 @@ function finish(){
       console.log( table.toString() );
     }
   }
-  if (argv.compact || argv.c) {
-    if( argv.compact == 's' || argv.c == 's' || argv.compact == 'so' || argv.c == 'so'){
-      var str = [];
-      Object.keys(C.headers).map(function(key){
-        var header = C.headers[key];
-        str.push(chalk.cyan(header.short) + ': ' + header.long)
-      })
-      if( !(argv.compact == 'so' || argv.c == 'so') ){
-        console.log(str.join(', ') + '\n')
-      }
+  if ( !!compact ){
+    var str = [];
+    Object.keys(C.headers).map(function(key){
+      var header = C.headers[key];
+      str.push(chalk.cyan(header.short) + ': ' + header.long)
+    })
+    if( !hasAskedForVeryCompact() ){
+      console.log(str.join(', ') + '\n')
     }
+
   }
 }
 
