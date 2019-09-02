@@ -138,9 +138,9 @@ filled-array@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/filled-array/-/filled-array-1.1.0.tgz#c3c4f6c663b923459a9aa29912d2d031f1507f84"
 
-git-state@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/git-state/-/git-state-3.1.0.tgz#89a8b60b98ffc94028a921f49c0da8e5869b1316"
+git-state@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/git-state/-/git-state-4.1.0.tgz#23c3a34b99b87ddb34527c741711498b92fb8e0a"
   dependencies:
     after-all-results "^2.0.0"
 
