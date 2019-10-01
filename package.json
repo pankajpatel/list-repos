@@ -27,6 +27,6 @@
     "cli-table": "^0.3.1",
     "git-state": "^3.1.0",
     "minimist": "^1.2.0",
-    "update-notifier": "^1.0.2"
+    "update-notifier": "^3.0.1"
   }
 }
