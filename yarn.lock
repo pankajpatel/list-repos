@@ -119,11 +119,11 @@ colors@1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.0.3.tgz#0433f44d809680fdeb60ed260f1b0c262e82a40b"
 
-configstore@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/configstore/-/configstore-5.0.0.tgz#37de662c7a49b5fe8dbcf8f6f5818d2d81ed852b"
+configstore@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/configstore/-/configstore-5.0.1.tgz#d365021b5df4b98cdd187d6a3b0e3f6a7cc5ed96"
   dependencies:
-    dot-prop "^5.1.0"
+    dot-prop "^5.2.0"
     graceful-fs "^4.1.2"
     make-dir "^3.0.0"
     unique-string "^2.0.0"
@@ -148,7 +148,7 @@ defer-to-connect@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/defer-to-connect/-/defer-to-connect-1.0.2.tgz#4bae758a314b034ae33902b5aac25a8dd6a8633e"
 
-dot-prop@^5.1.0:
+dot-prop@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/dot-prop/-/dot-prop-5.2.0.tgz#c34ecc29556dc45f1f4c22697b6f4904e0cc4fcb"
   dependencies:
@@ -171,6 +171,10 @@ end-of-stream@^1.1.0:
   resolved "https://registry.yarnpkg.com/end-of-stream/-/end-of-stream-1.4.4.tgz#5ae64a5f45057baf3626ec14da0ca5e4b2431eb0"
   dependencies:
     once "^1.4.0"
+
+escape-goat@^2.0.0:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/escape-goat/-/escape-goat-2.1.1.tgz#1b2dc77003676c457ec760b2dc68edb648188675"
 
 get-stream@^4.1.0:
   version "4.1.0"
@@ -361,6 +365,12 @@ pump@^3.0.0:
     end-of-stream "^1.1.0"
     once "^1.3.1"
 
+pupa@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/pupa/-/pupa-2.0.1.tgz#dbdc9ff48ffbea4a26a069b6f9f7abb051008726"
+  dependencies:
+    escape-goat "^2.0.0"
+
 rc@^1.2.8:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.8.tgz#cd924bf5200a075b83c188cd6b9e211b7fc0d3ed"
@@ -470,12 +480,12 @@ unique-string@^2.0.0:
     crypto-random-string "^2.0.0"
 
 update-notifier@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/update-notifier/-/update-notifier-4.0.0.tgz#f344a6f8b03e00e31b323d632a0e632e9f0e0654"
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/update-notifier/-/update-notifier-4.1.0.tgz#4866b98c3bc5b5473c020b1250583628f9a328f3"
   dependencies:
     boxen "^4.2.0"
     chalk "^3.0.0"
-    configstore "^5.0.0"
+    configstore "^5.0.1"
     has-yarn "^2.1.0"
     import-lazy "^2.1.0"
     is-ci "^2.0.0"
@@ -483,6 +493,7 @@ update-notifier@^4.0.0:
     is-npm "^4.0.0"
     is-yarn-global "^0.3.0"
     latest-version "^5.0.0"
+    pupa "^2.0.1"
     semver-diff "^3.1.1"
     xdg-basedir "^4.0.0"
 
