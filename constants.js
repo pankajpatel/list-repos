@@ -1,6 +1,6 @@
 module.exports = {
-	updateInterval: 2, //days only
-	headers: {
+  updateInterval: 2, //days only
+  headers: {
     directory: {
       long: 'Directory',
       short: 'DIR'
