@@ -88,7 +88,8 @@ function help () {
     '  --gitonly, -g        output only git repos\n' +
     '  --attention, -a      output only dirs which requires attention\n' +
     '                       also includes non git dirs, use -g to omit them\n' +
-    '  --simple, -s         make the output more simple for easy grepping'
+    '  --simple, -s         make the output more simple for easy grepping\n' +
+    '  --sort               sort output dirs'
   )
   process.exit()
 }
@@ -211,6 +212,15 @@ function finish(){
   spinner.stop();
   process.stdout.clearLine();  // clear current text
   process.stdout.cursorTo(0);  // move cursor to beginning of line
+
+  if (argv.sort) {
+    table.sort((a, b) => {
+      if(a[0] < b[0]) { return -1; }
+      if(a[0] > b[0]) { return 1; }
+      return 0;
+    })
+  }
+
   if (argv.simple || argv.s) {
     simple();
   } else {
