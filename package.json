@@ -1,6 +1,6 @@
 {
   "name": "list-repos",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "List all the repos, their HEADs and clean status in the Current Directory or the Supplied Directory",
   "main": "cli.js",
   "scripts": {},

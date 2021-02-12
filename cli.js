@@ -15,9 +15,11 @@ const pkg = require('./package')
 const C = require('./constants');
 const helpers = require('./src/helpers');
 
+const NOOP = () => {}
+
 const showGitOnly = argv.gitonly || argv.g;
 const dirs = argv._.length ? argv._ : [process.cwd()]
-const debug = Boolean(argv.debug);
+const debug = Boolean(argv.debug) ? console.log : NOOP;
 
 let spinner = null;
 let table = null;
@@ -65,12 +67,11 @@ function hasAskedForVeryCompact() {
 }
 
 function help() {
-  console.log(
-    `${pkg.name} ${pkg.version}\n${pkg.description}\n
-    \n'Usage:
-    \n${pkg.name} + ' [path] [options]\n
-    \n${helpers.optionsText}`
-  )
+  console.log(pkg.name, ' ', pkg.version)
+  console.log(pkg.description)
+  console.log('Usage:')
+  console.log(`${pkg.name} [path] [options]`)
+  console.log(helpers.optionsText)
   process.exit();
 }
 
@@ -78,14 +79,7 @@ function getTableHeader(type, color) {
   if (!color) {
     color = 'cyan';
   }
-  return [
-    chalk[color](C.headers.directory[type]),
-    chalk[color](C.headers.branch[type]),
-    chalk[color](C.headers.ahead[type]),
-    chalk[color](C.headers.dirty[type]),
-    chalk[color](C.headers.untracked[type]),
-    chalk[color](C.headers.stashes[type])
-  ]
+  return C.columnsOrder.map(key => chalk[color](C.headers[key][type]))
 }
 
 function init() {
@@ -102,6 +96,7 @@ function init() {
   tableOpts = {
     head: getTableHeader('long')
   };
+
   if (compact) {
     if (hasAskedForCompact() || hasAskedForVeryCompact()) {
       tableOpts.head = getTableHeader('short');
@@ -113,7 +108,7 @@ function init() {
       'right-mid': ''
     }
   }
-  table = new Table(tableOpts);
+  return new Table(tableOpts);
 }
 
 function prettyPath(pathString) {
@@ -125,19 +120,19 @@ function processDirectory(stat, callback) {
   fileIndex++;
   let pathString = path.join(cwd, stat.file);
   if (stat.stat.isDirectory()) {
-    if (debug) console.log(fileIndex, stat.file)
+    debug(fileIndex, stat.file)
     theGit.isGit(pathString, function (isGit) {
       if (isGit) {
         theGit.check(pathString, function (e, gitStatus) {
           if (e) return callback(e);
           gitStatus.git = true;
-          if (debug) console.log(stat.file, gitStatus)
+          debug(stat.file, gitStatus)
           insert(pathString, gitStatus)
           return callback(null, true)
         })
       } else {
         const gitStatus = helpers.emptyGitStatus;
-        if (debug) console.log(stat.file, gitStatus)
+        debug(stat.file, gitStatus)
         if (!showGitOnly) {
           insert(pathString, gitStatus)
         }
@@ -145,7 +140,7 @@ function processDirectory(stat, callback) {
       }
     })
   } else {
-    if (debug) console.log(stat.file, false)
+    debug(stat.file, false)
     return callback(null, false)
   }
 }
@@ -156,23 +151,19 @@ function insert(pathString, status) {
   statuses.push(status)
 
   // @todo: refactor
-  let methodName = status.dirty === 0 ?
-    status.ahead === 0 ?
-    status.untracked === 0 ?
-    'grey' :
-    'yellow' :
-    'green' :
-    'red'
+  let methodName = status.dirty === 0
+    ? status.ahead === 0
+      ? status.untracked === 0
+        ? 'grey'
+        : 'yellow'
+      : 'green'
+    : 'red'
 
   if (!((argv.attention || argv.a) && (methodName === 'grey'))) {
-    table.push([
-      directoryName,
-      checkAndGetEmptyString(status, 'branch', methodName),
-      checkAndGetEmptyString(status, 'ahead', methodName),
-      checkAndGetEmptyString(status, 'dirty', methodName),
-      checkAndGetEmptyString(status, 'untracked', methodName),
-      checkAndGetEmptyString(status, 'stashes', methodName)
-    ]);
+    table.push(C.columnsOrder.map(key => key === 'directory'
+      ? directoryName
+      : checkAndGetEmptyString(status, key, methodName)
+    ));
   }
 }
 
@@ -230,7 +221,7 @@ function finish() {
   }
 }
 
-init();
+table = init();
 console.log(chalk.green(cwd))
 
 fs.readdir(cwd, function (err, files) {
@@ -247,7 +238,7 @@ fs.readdir(cwd, function (err, files) {
     })
   }, function (err, statuses) {
     if (err) throw new Error(err);
-    if (debug) console.log(statuses.length);
+    debug(statuses.length);
     _async.filter(statuses, processDirectory, function () {
       finish();
     })
