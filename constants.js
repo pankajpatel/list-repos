@@ -1,5 +1,13 @@
 module.exports = {
   updateInterval: 2, //days only
+  columnsOrder: [
+    'directory',
+    'branch',
+    'ahead',
+    'dirty',
+    'untracked',
+    'stashes'
+  ],
   headers: {
     directory: {
       long: 'Directory',
