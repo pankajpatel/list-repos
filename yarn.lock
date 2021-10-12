@@ -38,8 +38,9 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
     color-convert "^2.0.1"
 
 async@^3.1.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/async/-/async-3.2.0.tgz#b3a2685c5ebb641d3de02d161002c60fc9f85720"
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/async/-/async-3.2.1.tgz#d3274ec66d107a47476a4c49136aacdb00665fc8"
+  integrity sha512-XdD5lRO/87udXCMC9meWdYiR+Nq6ZjUfXidViUZGu2F1MO4T3XwZ1et0hb2++BgLfhyJwy44BGB/yx80ABx8hg==
 
 boxen@^5.0.0:
   version "5.0.0"
