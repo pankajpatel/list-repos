@@ -4,7 +4,7 @@
 
 This utility lists the current active branch on repos present in specified directory. By default it takes the current directory
 
-Read more at [http://time2hack.com/2016/10/introducing-list-repos.html](http://time2hack.com/2016/10/introducing-list-repos.html)
+Read more at [time2hack.com/introducing-list-repos](https://time2hack.com/introducing-list-repos)
 
 To install the utility, simply do
 ```
