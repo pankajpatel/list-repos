@@ -3,7 +3,9 @@
   "version": "0.8.0",
   "description": "List all the repos, their HEADs and clean status in the Current Directory or the Supplied Directory",
   "main": "cli.js",
-  "scripts": {},
+  "scripts": {
+    "test": "jest"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pankajpatel/list-repos.git"
@@ -29,5 +31,12 @@
     "git-state": "^4.1.0",
     "minimist": "^1.2.0",
     "update-notifier": "^5.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.6.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.4.5",
+    "prettier": "2.5.1"
   }
 }
