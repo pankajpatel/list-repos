@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
+const fs = require('fs/promises');
 const path = require('path');
 const chalk = require('chalk');
 const Table = require('cli-table');
@@ -13,13 +13,14 @@ const argv = require('minimist')(process.argv.slice(2));
 
 const pkg = require('./package');
 const C = require('./src/constants');
-const { printHelp } = require('./src/functions');
+const { printHelp, colorForStatus } = require('./src/functions');
 
 const NOOP = () => {};
 
+const linePrinter = console.log;
 const showGitOnly = argv.gitonly || argv.g;
 const dirs = argv._.length ? argv._ : [process.cwd()];
-const debug = Boolean(argv.debug) ? console.log : NOOP;
+const debug = Boolean(argv.debug) ? linePrinter : NOOP;
 
 let spinner = null;
 let table = null;
@@ -27,8 +28,6 @@ let cwd = null;
 let fileIndex = 0;
 let statuses = [];
 let compact = false;
-
-const linePrinter = console.log;
 
 updateNotifier({
   pkg: pkg,
@@ -66,12 +65,13 @@ function getTableHeader(type, color) {
   if (!color) {
     color = 'cyan';
   }
-  return C.columnsOrder.map((key) => chalk[color](C.headers[key][type]));
+  const colorizer = chalk[color];
+  return C.columnsOrder.map((key) => colorizer(C.headers[key][type]));
 }
 
-function init() {
+function init(directories) {
   //either passed from CLI or take the current directory
-  cwd = dirs[0];
+  cwd = directories[0];
 
   //Spinners
   spinner = new Spinner('%s');
@@ -137,15 +137,7 @@ function insert(pathString, status) {
   status.directory = directoryName;
   statuses.push(status);
 
-  // TODO: refactor
-  let methodName =
-    status.dirty === 0
-      ? status.ahead === 0
-        ? status.untracked === 0
-          ? 'grey'
-          : 'yellow'
-        : 'green'
-      : 'red';
+  let methodName = colorForStatus(status);
 
   if (!((argv.attention || argv.a) && methodName === 'grey')) {
     table.push(
@@ -168,13 +160,11 @@ function simpleStatus(status) {
   for (let i = 0; i < C.simple.length; i++) {
     str.push(status[C.simple[i]]);
   }
-  console.log(str.join(','));
+  linePrinter(str.join(','));
 }
 
-function simple() {
-  for (let i = 0; i < statuses.length; i++) {
-    simpleStatus(statuses[i]);
-  }
+function simple(_statuses) {
+  _statuses.forEach((status) => simpleStatus(status));
 }
 
 function finish() {
@@ -183,25 +173,17 @@ function finish() {
   process.stdout.cursorTo(0); // move cursor to beginning of line
 
   if (argv.sort) {
-    table.sort((a, b) => {
-      if (a[0] < b[0]) {
-        return -1;
-      }
-      if (a[0] > b[0]) {
-        return 1;
-      }
-      return 0;
-    });
+    table.sort((a, b) => a[0] - b[0]);
   }
 
   if (argv.simple || argv.s) {
-    simple();
+    simple(statuses);
   } else {
-    if (!chalk.supportsColor) {
-      console.log(chalk.stripColor(table.toString()));
-    } else {
-      console.log(table.toString());
-    }
+    linePrinter(
+      chalk.supportsColor
+        ? table.toString()
+        : chalk.stripColor(table.toString())
+    );
   }
   if (compact) {
     let str = [];
@@ -210,7 +192,7 @@ function finish() {
       str.push(chalk.cyan(header.short) + ': ' + header.long);
     });
     if (!hasAskedForVeryCompact()) {
-      console.log(str.join(', ') + '\n');
+      linePrinter(str.join(', ') + '\n');
     }
   }
 }
@@ -219,30 +201,30 @@ const listRepos = () => {
   table = init(dirs);
   linePrinter(chalk.green(cwd));
 
-  fs.readdir(cwd, function (err, files) {
-    if (err) {
+  fs.readdir(cwd).then(
+    (files) =>
+      _async.map(
+        files,
+        function (file, statCallback) {
+          fs.stat(path.join(cwd, file)).then(
+            (stat) =>
+              statCallback(null, {
+                file: file,
+                stat: stat,
+              }),
+            (err) => statCallback(err)
+          );
+        },
+        function (err, statuses) {
+          if (err) throw new Error(err);
+          debug(statuses.length);
+          _async.filter(statuses, processDirectory, () => finish(statuses));
+        }
+      ),
+    (err) => {
       throw err;
     }
-    _async.map(
-      files,
-      function (file, statCallback) {
-        fs.stat(path.join(cwd, file), function (err, stat) {
-          if (err) return statCallback(err);
-          statCallback(null, {
-            file: file,
-            stat: stat,
-          });
-        });
-      },
-      function (err, statuses) {
-        if (err) throw new Error(err);
-        debug(statuses.length);
-        _async.filter(statuses, processDirectory, function () {
-          finish();
-        });
-      }
-    );
-  });
+  );
 };
 
 listRepos();
