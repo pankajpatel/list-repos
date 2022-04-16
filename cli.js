@@ -17,10 +17,10 @@ const { printHelp, colorForStatus } = require('./src/functions');
 
 const NOOP = () => {};
 
-const linePrinter = console.log;
+const printLine = console.log;
 const showGitOnly = argv.gitonly || argv.g;
 const dirs = argv._.length ? argv._ : [process.cwd()];
-const debug = Boolean(argv.debug) ? linePrinter : NOOP;
+const debug = Boolean(argv.debug) ? printLine : NOOP;
 
 let spinner = null;
 let table = null;
@@ -35,17 +35,17 @@ updateNotifier({
 }).notify();
 
 process.on('uncaughtException', (err) => {
-  linePrinter(`Caught exception: ${err}`);
+  printLine(`Caught exception: ${err}`);
   process.exit();
 });
 
 if (argv.version || argv.v) {
-  linePrinter(pkg.version);
+  printLine(pkg.version);
   process.exit();
 }
 
 if (argv.help || argv.h) {
-  printHelp(linePrinter);
+  printHelp(printLine);
   process.exit();
 }
 
@@ -160,7 +160,7 @@ function simpleStatus(status) {
   for (let i = 0; i < C.simple.length; i++) {
     str.push(status[C.simple[i]]);
   }
-  linePrinter(str.join(','));
+  printLine(str.join(','));
 }
 
 function simple(_statuses) {
@@ -179,7 +179,7 @@ function finish() {
   if (argv.simple || argv.s) {
     simple(statuses);
   } else {
-    linePrinter(
+    printLine(
       chalk.supportsColor
         ? table.toString()
         : chalk.stripColor(table.toString())
@@ -192,39 +192,37 @@ function finish() {
       str.push(chalk.cyan(header.short) + ': ' + header.long);
     });
     if (!hasAskedForVeryCompact()) {
-      linePrinter(str.join(', ') + '\n');
+      printLine(str.join(', ') + '\n');
     }
   }
 }
 
 const listRepos = () => {
   table = init(dirs);
-  linePrinter(chalk.green(cwd));
+  printLine(chalk.green(cwd));
 
-  fs.readdir(cwd).then(
-    (files) =>
-      _async.map(
-        files,
-        function (file, statCallback) {
-          fs.stat(path.join(cwd, file)).then(
+  fs.readdir(cwd)
+    .then((files) =>
+      Promise.all(
+        files.map((file) =>
+          fs.stat(file).then(
             (stat) =>
-              statCallback(null, {
+              processDirectory(null, {
                 file: file,
                 stat: stat,
               }),
-            (err) => statCallback(err)
-          );
-        },
-        function (err, statuses) {
-          if (err) throw new Error(err);
-          debug(statuses.length);
-          _async.filter(statuses, processDirectory, () => finish(statuses));
-        }
-      ),
-    (err) => {
+            (err) => processDirectory(err)
+          )
+        )
+      )
+    )
+    .then((statuses) => {
+      debug(statuses.length);
+      _async.filter(statuses, processDirectory, () => finish(statuses));
+    })
+    .catch((err) => {
       throw err;
-    }
-  );
+    });
 };
 
 listRepos();
