@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/pankajpatel/list-repos#readme",
   "dependencies": {
-    "chalk": "~4.1.2",
+    "chalk": "~5.0.1",
     "cli-spinner": "^0.2.5",
     "cli-table": "^0.3.4",
     "git-state": "^4.1.0",
