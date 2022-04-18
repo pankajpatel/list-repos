@@ -165,7 +165,7 @@ function finish() {
   }
 }
 
-const listRepos = async () => {
+const listRepos = () => {
   table = init(dirs);
   printLine(chalk.green(cwd));
 
