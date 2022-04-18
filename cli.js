@@ -1,34 +1,35 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
+const fs = require('fs/promises');
 const path = require('path');
 const chalk = require('chalk');
 const Table = require('cli-table');
-const _async = require('async');
 const updateNotifier = require('update-notifier');
 
-const theGit = require('git-state');
 const { Spinner } = require('cli-spinner');
 const argv = require('minimist')(process.argv.slice(2));
 
 const pkg = require('./package');
 const C = require('./src/constants');
-const { printHelp } = require('./src/functions');
+const {
+  printHelp,
+  prettyPath,
+  colorForStatus,
+  processDirectory,
+} = require('./src/functions');
 
 const NOOP = () => {};
 
+const printLine = console.log;
 const showGitOnly = argv.gitonly || argv.g;
 const dirs = argv._.length ? argv._ : [process.cwd()];
-const debug = Boolean(argv.debug) ? console.log : NOOP;
+const debug = Boolean(argv.debug) ? printLine : NOOP;
 
 let spinner = null;
 let table = null;
 let cwd = null;
-let fileIndex = 0;
 let statuses = [];
 let compact = false;
-
-const linePrinter = console.log;
 
 updateNotifier({
   pkg: pkg,
@@ -36,17 +37,17 @@ updateNotifier({
 }).notify();
 
 process.on('uncaughtException', (err) => {
-  linePrinter(`Caught exception: ${err}`);
+  printLine(`Caught exception: ${err}`);
   process.exit();
 });
 
 if (argv.version || argv.v) {
-  linePrinter(pkg.version);
+  printLine(pkg.version);
   process.exit();
 }
 
 if (argv.help || argv.h) {
-  printHelp(linePrinter);
+  printHelp(printLine);
   process.exit();
 }
 
@@ -66,12 +67,13 @@ function getTableHeader(type, color) {
   if (!color) {
     color = 'cyan';
   }
-  return C.columnsOrder.map((key) => chalk[color](C.headers[key][type]));
+  const colorizer = chalk[color];
+  return C.columnsOrder.map((key) => colorizer(C.headers[key][type]));
 }
 
-function init() {
+function init(directories) {
   //either passed from CLI or take the current directory
-  cwd = dirs[0];
+  cwd = directories[0];
 
   //Spinners
   spinner = new Spinner('%s');
@@ -98,54 +100,12 @@ function init() {
   return new Table(tableOpts);
 }
 
-function prettyPath(pathString) {
-  let p = pathString.split(path.sep);
-  return p[p.length - 1];
-}
-
-function processDirectory(stat, callback) {
-  fileIndex++;
-  let pathString = path.join(cwd, stat.file);
-  if (stat.stat.isDirectory()) {
-    debug(fileIndex, stat.file);
-    theGit.isGit(pathString, function (isGit) {
-      if (isGit) {
-        theGit.check(pathString, function (e, gitStatus) {
-          if (e) return callback(e);
-          gitStatus.git = true;
-          debug(stat.file, gitStatus);
-          insert(pathString, gitStatus);
-          return callback(null, true);
-        });
-      } else {
-        const gitStatus = C.emptyGitStatus;
-        debug(stat.file, gitStatus);
-        if (!showGitOnly) {
-          insert(pathString, gitStatus);
-        }
-        return callback(null, false);
-      }
-    });
-  } else {
-    debug(stat.file, false);
-    return callback(null, false);
-  }
-}
-
 function insert(pathString, status) {
   let directoryName = prettyPath(pathString);
   status.directory = directoryName;
   statuses.push(status);
 
-  // TODO: refactor
-  let methodName =
-    status.dirty === 0
-      ? status.ahead === 0
-        ? status.untracked === 0
-          ? 'grey'
-          : 'yellow'
-        : 'green'
-      : 'red';
+  let methodName = colorForStatus(status);
 
   if (!((argv.attention || argv.a) && methodName === 'grey')) {
     table.push(
@@ -168,13 +128,11 @@ function simpleStatus(status) {
   for (let i = 0; i < C.simple.length; i++) {
     str.push(status[C.simple[i]]);
   }
-  console.log(str.join(','));
+  printLine(str.join(','));
 }
 
-function simple() {
-  for (let i = 0; i < statuses.length; i++) {
-    simpleStatus(statuses[i]);
-  }
+function simple(_statuses) {
+  _statuses.forEach((status) => simpleStatus(status));
 }
 
 function finish() {
@@ -183,25 +141,17 @@ function finish() {
   process.stdout.cursorTo(0); // move cursor to beginning of line
 
   if (argv.sort) {
-    table.sort((a, b) => {
-      if (a[0] < b[0]) {
-        return -1;
-      }
-      if (a[0] > b[0]) {
-        return 1;
-      }
-      return 0;
-    });
+    table.sort((a, b) => a[0] - b[0]);
   }
 
   if (argv.simple || argv.s) {
-    simple();
+    simple(statuses);
   } else {
-    if (!chalk.supportsColor) {
-      console.log(chalk.stripColor(table.toString()));
-    } else {
-      console.log(table.toString());
-    }
+    printLine(
+      chalk.supportsColor
+        ? table.toString()
+        : chalk.stripColor(table.toString())
+    );
   }
   if (compact) {
     let str = [];
@@ -210,39 +160,31 @@ function finish() {
       str.push(chalk.cyan(header.short) + ': ' + header.long);
     });
     if (!hasAskedForVeryCompact()) {
-      console.log(str.join(', ') + '\n');
+      printLine(str.join(', ') + '\n');
     }
   }
 }
 
 const listRepos = () => {
   table = init(dirs);
-  linePrinter(chalk.green(cwd));
+  printLine(chalk.green(cwd));
 
-  fs.readdir(cwd, function (err, files) {
-    if (err) {
+  fs.readdir(cwd)
+    .then((files) => files.map((file) => path.resolve(cwd, file)))
+    .then((files) =>
+      Promise.all(
+        files.map((file) =>
+          fs.stat(file).then((stat) => ({ file, stat }), printLine)
+        )
+      )
+    )
+    .then((statuses) =>
+      processDirectory(statuses, { debug, insert, C, showGitOnly })
+    )
+    .then((statuses) => finish(statuses))
+    .catch((err) => {
       throw err;
-    }
-    _async.map(
-      files,
-      function (file, statCallback) {
-        fs.stat(path.join(cwd, file), function (err, stat) {
-          if (err) return statCallback(err);
-          statCallback(null, {
-            file: file,
-            stat: stat,
-          });
-        });
-      },
-      function (err, statuses) {
-        if (err) throw new Error(err);
-        debug(statuses.length);
-        _async.filter(statuses, processDirectory, function () {
-          finish();
-        });
-      }
-    );
-  });
+    });
 };
 
 listRepos();

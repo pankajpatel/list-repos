@@ -1,4 +1,4 @@
-const printHelp = require('./printHelp');
+const { printHelp } = require('./printHelp');
 
 describe('printHelp()', () => {
   it('should run the passed printer function', () => {
