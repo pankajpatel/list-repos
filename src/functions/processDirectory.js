@@ -1,11 +1,29 @@
 const { isGit } = require('./isGit');
 const { gitCheck } = require('./gitCheck');
 
+const processNonGitDir = (stat, options) =>
+  new Promise((resolve) => {
+    const gitStatus = options.C.emptyGitStatus;
+    options.debug(stat.file, gitStatus);
+    if (!options.showGitOnly) {
+      options.insert(stat.file, gitStatus);
+      return resolve(true);
+    }
+    return resolve(false);
+  });
+
+const processGitDir = (stat, options) =>
+  gitCheck(stat.file).then((gitStatus) => {
+    gitStatus.git = true;
+    options.debug(stat.file, gitStatus);
+    options.insert(stat.file, gitStatus);
+    return Promise.resolve(true);
+  });
+
 const processDirectory = (stat, options) => {
   if (!stat || !stat.file) {
     return Promise.resolve(false);
   }
-  let pathString = stat.file;
 
   if (!stat.stat.isDirectory()) {
     options.debug(stat.file, false);
@@ -16,25 +34,10 @@ const processDirectory = (stat, options) => {
 
   return Promise.resolve()
     .catch((e) => Promise.resolve(false))
-    .then(() => isGit(pathString))
-    .then((isDirGit) => {
-      return !isDirGit
-        ? new Promise((resolve) => {
-            const gitStatus = options.C.emptyGitStatus;
-            options.debug(stat.file, gitStatus);
-            if (!options.showGitOnly) {
-              options.insert(pathString, gitStatus);
-              return resolve(true);
-            }
-            return resolve(false);
-          })
-        : gitCheck(pathString).then((gitStatus) => {
-            gitStatus.git = true;
-            options.debug(stat.file, gitStatus);
-            options.insert(pathString, gitStatus);
-            return Promise.resolve(true);
-          });
-    });
+    .then(() => isGit(stat.file))
+    .then((isDirGit) =>
+      !isDirGit ? processNonGitDir(stat, options) : processGitDir(stat, options)
+    );
 };
 
 const processDirectories = (stats, opts) =>
