@@ -4,16 +4,19 @@ const fs = require('fs/promises');
 const path = require('path');
 const chalk = require('chalk');
 const Table = require('cli-table');
-const _async = require('async');
 const updateNotifier = require('update-notifier');
 
-const theGit = require('git-state');
 const { Spinner } = require('cli-spinner');
 const argv = require('minimist')(process.argv.slice(2));
 
 const pkg = require('./package');
 const C = require('./src/constants');
-const { printHelp, colorForStatus } = require('./src/functions');
+const {
+  printHelp,
+  prettyPath,
+  colorForStatus,
+  processDirectory,
+} = require('./src/functions');
 
 const NOOP = () => {};
 
@@ -25,7 +28,6 @@ const debug = Boolean(argv.debug) ? printLine : NOOP;
 let spinner = null;
 let table = null;
 let cwd = null;
-let fileIndex = 0;
 let statuses = [];
 let compact = false;
 
@@ -98,40 +100,6 @@ function init(directories) {
   return new Table(tableOpts);
 }
 
-function prettyPath(pathString) {
-  let p = pathString.split(path.sep);
-  return p[p.length - 1];
-}
-
-function processDirectory(stat, callback) {
-  fileIndex++;
-  let pathString = path.join(cwd, stat.file);
-  if (stat.stat.isDirectory()) {
-    debug(fileIndex, stat.file);
-    theGit.isGit(pathString, function (isGit) {
-      if (isGit) {
-        theGit.check(pathString, function (e, gitStatus) {
-          if (e) return callback(e);
-          gitStatus.git = true;
-          debug(stat.file, gitStatus);
-          insert(pathString, gitStatus);
-          return callback(null, true);
-        });
-      } else {
-        const gitStatus = C.emptyGitStatus;
-        debug(stat.file, gitStatus);
-        if (!showGitOnly) {
-          insert(pathString, gitStatus);
-        }
-        return callback(null, false);
-      }
-    });
-  } else {
-    debug(stat.file, false);
-    return callback(null, false);
-  }
-}
-
 function insert(pathString, status) {
   let directoryName = prettyPath(pathString);
   status.directory = directoryName;
@@ -197,29 +165,23 @@ function finish() {
   }
 }
 
-const listRepos = () => {
+const listRepos = async () => {
   table = init(dirs);
   printLine(chalk.green(cwd));
 
   fs.readdir(cwd)
+    .then((files) => files.map((file) => path.resolve(cwd, file)))
     .then((files) =>
       Promise.all(
         files.map((file) =>
-          fs.stat(file).then(
-            (stat) =>
-              processDirectory(null, {
-                file: file,
-                stat: stat,
-              }),
-            (err) => processDirectory(err)
-          )
+          fs.stat(file).then((stat) => ({ file, stat }), printLine)
         )
       )
     )
-    .then((statuses) => {
-      debug(statuses.length);
-      _async.filter(statuses, processDirectory, () => finish(statuses));
-    })
+    .then((statuses) =>
+      processDirectory(statuses, { debug, insert, C, showGitOnly })
+    )
+    .then((statuses) => finish(statuses))
     .catch((err) => {
       throw err;
     });
