@@ -12,4 +12,6 @@ function printHelp(linePrinter = console.log) {
   linePrinter(lines.join('\n'));
 }
 
-module.exports = printHelp;
+module.exports = {
+  printHelp: printHelp,
+};
