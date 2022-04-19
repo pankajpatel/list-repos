@@ -5,7 +5,8 @@
   "main": "cli.js",
   "scripts": {
     "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "pre-commit": "npm test && lint-staged"
   },
   "repository": {
     "type": "git",
