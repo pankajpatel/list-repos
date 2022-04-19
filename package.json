@@ -4,7 +4,9 @@
   "description": "List all the repos, their HEADs and clean status in the Current Directory or the Supplied Directory",
   "main": "cli.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prepare": "husky install",
+    "pre-commit": "npm test && lint-staged"
   },
   "repository": {
     "type": "git",
@@ -35,7 +37,15 @@
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.0",
     "jest": "^27.4.5",
+    "lint-staged": "^12.3.8",
     "prettier": "2.6.2"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "prettier --ignore-unknown --write"
+    ]
   }
 }
