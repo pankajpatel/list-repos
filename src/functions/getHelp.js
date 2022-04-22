@@ -1,7 +1,7 @@
 const pkg = require('../../package');
 const { optionsText } = require('../constants');
 
-function printHelp(linePrinter = console.log) {
+function getHelp() {
   const lines = [
     `${pkg.name} ${pkg.version}`,
     pkg.description,
@@ -9,9 +9,9 @@ function printHelp(linePrinter = console.log) {
     `${pkg.name} [path] [options]`,
     optionsText,
   ];
-  linePrinter(lines.join('\n'));
+  return lines.join('\n');
 }
 
 module.exports = {
-  printHelp: printHelp,
+  getHelp: getHelp,
 };

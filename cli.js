@@ -3,35 +3,36 @@
 const fs = require('fs/promises');
 const path = require('path');
 const chalk = require('chalk');
-const Table = require('cli-table');
-const updateNotifier = require('update-notifier');
+const UpdateNotifier = require('update-notifier');
 
-const { Spinner } = require('cli-spinner');
 const argv = require('minimist')(process.argv.slice(2));
 
 const pkg = require('./package');
 const C = require('./src/constants');
 const {
-  printHelp,
+  getHelp,
   prettyPath,
+  stopSpinner,
+  startSpinner,
   colorForStatus,
   processDirectory,
 } = require('./src/functions');
 
-const NOOP = () => {};
+const { initTable } = require('./src/functions/initTable');
+const { getCompactness } = require('./src/functions/getCompactness');
 
 const printLine = console.log;
 const showGitOnly = argv.gitonly || argv.g;
+const shouldShowHelp = argv.help || argv.h;
+const shouldShowVersion = argv.version || argv.v;
 const dirs = argv._.length ? argv._ : [process.cwd()];
-const debug = Boolean(argv.debug) ? printLine : NOOP;
+const debug = Boolean(argv.debug) ? printLine : C.NOOP;
 
-let spinner = null;
 let table = null;
-let cwd = null;
 let statuses = [];
 let compact = false;
 
-updateNotifier({
+UpdateNotifier({
   pkg: pkg,
   updateCheckInterval: C.updateInterval * C.daysMultiplier,
 }).notify();
@@ -41,63 +42,14 @@ process.on('uncaughtException', (err) => {
   process.exit();
 });
 
-if (argv.version || argv.v) {
+if (shouldShowVersion) {
   printLine(pkg.version);
   process.exit();
 }
 
-if (argv.help || argv.h) {
-  printHelp(printLine);
+if (shouldShowHelp) {
+  printLine(getHelp());
   process.exit();
-}
-
-if (argv.compact || argv.c) {
-  compact = argv.compact || argv.c;
-}
-
-function hasAskedForCompact() {
-  return compact && compact === 's';
-}
-
-function hasAskedForVeryCompact() {
-  return compact && compact === 'so';
-}
-
-function getTableHeader(type, color) {
-  if (!color) {
-    color = 'cyan';
-  }
-  const colorizer = chalk[color];
-  return C.columnsOrder.map((key) => colorizer(C.headers[key][type]));
-}
-
-function init(directories) {
-  //either passed from CLI or take the current directory
-  cwd = directories[0];
-
-  //Spinners
-  spinner = new Spinner('%s');
-  spinner.setSpinnerString(18);
-  spinner.start();
-
-  //Console Tables
-  let tableOpts = {};
-  tableOpts = {
-    head: getTableHeader('long'),
-  };
-
-  if (compact) {
-    if (hasAskedForCompact() || hasAskedForVeryCompact()) {
-      tableOpts.head = getTableHeader('short');
-    }
-    tableOpts.chars = {
-      mid: '',
-      'left-mid': '',
-      'mid-mid': '',
-      'right-mid': '',
-    };
-  }
-  return new Table(tableOpts);
 }
 
 function insert(pathString, status) {
@@ -128,15 +80,12 @@ function simpleStatus(status) {
   for (let i = 0; i < C.simple.length; i++) {
     str.push(status[C.simple[i]]);
   }
-  printLine(str.join(','));
+  return str.join(',');
 }
 
-function simple(_statuses) {
-  _statuses.forEach((status) => simpleStatus(status));
-}
+const simple = (statuses) => statuses.map((status) => simpleStatus(status));
 
-function finish() {
-  spinner.stop();
+const finish = (compactness) => () => {
   process.stdout.clearLine(); // clear current text
   process.stdout.cursorTo(0); // move cursor to beginning of line
 
@@ -145,7 +94,7 @@ function finish() {
   }
 
   if (argv.simple || argv.s) {
-    simple(statuses);
+    printLine(simple(statuses).join('\n'));
   } else {
     printLine(
       chalk.supportsColor
@@ -153,20 +102,24 @@ function finish() {
         : chalk.stripColor(table.toString())
     );
   }
-  if (compact) {
+  if (compactness !== C.COMPACTNESS_LEVELS.NONE) {
     let str = [];
     Object.keys(C.headers).map(function (key) {
       let header = C.headers[key];
       str.push(chalk.cyan(header.short) + ': ' + header.long);
     });
-    if (!hasAskedForVeryCompact()) {
+    if (compactness !== C.COMPACTNESS_LEVELS.HIGH) {
       printLine(str.join(', ') + '\n');
     }
   }
-}
+};
 
-const listRepos = () => {
-  table = init(dirs);
+const listRepos = (_dirs) => {
+  const spinner = startSpinner();
+  const compactness = getCompactness(argv);
+
+  table = initTable(compactness);
+  const [cwd] = _dirs;
   printLine(chalk.green(cwd));
 
   fs.readdir(cwd)
@@ -181,10 +134,13 @@ const listRepos = () => {
     .then((statuses) =>
       processDirectory(statuses, { debug, insert, C, showGitOnly })
     )
-    .then((statuses) => finish(statuses))
+    .then((statuses) => {
+      stopSpinner(spinner);
+      return finish(compactness)(statuses);
+    })
     .catch((err) => {
       throw err;
     });
 };
 
-listRepos();
+listRepos(dirs);
