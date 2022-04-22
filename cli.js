@@ -94,7 +94,7 @@ const finish = (compactness) => () => {
   }
 
   if (argv.simple || argv.s) {
-    printLine(simple(statuses));
+    printLine(simple(statuses).join('\n'));
   } else {
     printLine(
       chalk.supportsColor
