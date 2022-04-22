@@ -16,7 +16,17 @@ Options:
 
 `;
 
+const NOOP = () => {};
+
+const COMPACTNESS_LEVELS = {
+  NONE: 'NONE',
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+};
+
 module.exports = {
+  defaultHeaderColor: 'cyan',
   updateInterval: 2, //days only
   daysMultiplier: 1000 * 60 * 60 * 24,
   columnsOrder: [
@@ -64,4 +74,6 @@ module.exports = {
     dirty: '-',
   },
   optionsText: optionsText,
+  COMPACTNESS_LEVELS,
+  NOOP,
 };
