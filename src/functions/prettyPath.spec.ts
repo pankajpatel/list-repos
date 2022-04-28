@@ -1,4 +1,4 @@
-const { prettyPath } = require('./prettyPath');
+import { prettyPath } from './prettyPath';
 
 describe('prettyPath()', () => {
   it('should return last segment of path for file', () => {

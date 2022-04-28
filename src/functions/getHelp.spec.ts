@@ -1,4 +1,4 @@
-const { getHelp } = require('./getHelp');
+import { getHelp } from './getHelp';
 
 describe('getHelp()', () => {
   it('should run the passed printer function', () => {

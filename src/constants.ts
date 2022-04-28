@@ -1,4 +1,6 @@
-const optionsText = `
+import { ForegroundColor } from 'chalk';
+
+export const optionsText = `
 The path defaults to the current directory if not specified.
 
 Options:
@@ -16,17 +18,45 @@ Options:
 
 `;
 
-const NOOP = () => {};
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const NOOP = () => {};
 
-const COMPACTNESS_LEVELS = {
+export const COMPACTNESS_LEVELS = {
   NONE: 'NONE',
   LOW: 'LOW',
   MEDIUM: 'MEDIUM',
   HIGH: 'HIGH',
 };
 
-module.exports = {
-  defaultHeaderColor: 'cyan',
+const HEADERS: Record<TableHeader, Record<TableHeaderType, string>> = {
+  directory: {
+    long: 'Directory',
+    short: 'DIR',
+  },
+  branch: {
+    long: 'Branch',
+    short: 'B',
+  },
+  ahead: {
+    long: 'Ahead',
+    short: 'A',
+  },
+  dirty: {
+    long: 'Dirty',
+    short: 'D',
+  },
+  untracked: {
+    long: 'Untracked',
+    short: 'U',
+  },
+  stashes: {
+    long: 'Stashes',
+    short: 'S',
+  },
+};
+
+export default {
+  defaultHeaderColor: 'cyan' as typeof ForegroundColor,
   updateInterval: 2, //days only
   daysMultiplier: 1000 * 60 * 60 * 24,
   columnsOrder: [
@@ -36,34 +66,16 @@ module.exports = {
     'dirty',
     'untracked',
     'stashes',
-  ],
-  headers: {
-    directory: {
-      long: 'Directory',
-      short: 'DIR',
-    },
-    branch: {
-      long: 'Branch',
-      short: 'B',
-    },
-    ahead: {
-      long: 'Ahead',
-      short: 'A',
-    },
-    dirty: {
-      long: 'Dirty',
-      short: 'D',
-    },
-    untracked: {
-      long: 'Untracked',
-      short: 'U',
-    },
-    stashes: {
-      long: 'Stashes',
-      short: 'S',
-    },
-  },
-  simple: ['directory', 'branch', 'ahead', 'dirty', 'untracked', 'stashes'],
+  ] as Array<TableHeader>,
+  headers: HEADERS,
+  simple: [
+    'directory',
+    'branch',
+    'ahead',
+    'dirty',
+    'untracked',
+    'stashes',
+  ] as Array<TableHeader>,
   emptyGitStatus: {
     branch: '-',
     issues: '-',

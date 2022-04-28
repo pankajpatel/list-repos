@@ -1,5 +1,5 @@
-const constants = require('../constants');
-const { getCompactness } = require('./getCompactness');
+import constants from '../constants';
+import { getCompactness } from './getCompactness';
 
 describe('getCompactness()', () => {
   describe('-c', () => {
