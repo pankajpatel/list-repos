@@ -1,25 +1,25 @@
 #!/usr/bin/env node
 
-const fs = require('fs/promises');
-const path = require('path');
-const chalk = require('chalk');
-const UpdateNotifier = require('update-notifier');
+import path from 'path';
+import fs from 'fs/promises';
+import Table from 'cli-table';
+import minimist from 'minimist';
+import UpdateNotifier from 'update-notifier';
+import chalk, { ForegroundColor } from 'chalk';
 
-const argv = require('minimist')(process.argv.slice(2));
-
-const pkg = require('./package');
-const C = require('./src/constants');
-const {
+import {
   getHelp,
-  prettyPath,
   stopSpinner,
   startSpinner,
   colorForStatus,
-  processDirectory,
-} = require('./src/functions');
+  processDirectories,
+} from './functions';
+import C from './constants';
+import { name, version } from '../package.json';
+import { initTable } from './functions/initTable';
+import { getCompactness } from './functions/getCompactness';
 
-const { initTable } = require('./src/functions/initTable');
-const { getCompactness } = require('./src/functions/getCompactness');
+const argv = minimist(process.argv.slice(2));
 
 const printLine = console.log;
 const showGitOnly = argv.gitonly || argv.g;
@@ -28,12 +28,11 @@ const shouldShowVersion = argv.version || argv.v;
 const dirs = argv._.length ? argv._ : [process.cwd()];
 const debug = Boolean(argv.debug) ? printLine : C.NOOP;
 
-let table = null;
-let statuses = [];
-let compact = false;
+let table: Table;
+const statuses: ExtendedGitStatus[] = [];
 
 UpdateNotifier({
-  pkg: pkg,
+  pkg: { name, version },
   updateCheckInterval: C.updateInterval * C.daysMultiplier,
 }).notify();
 
@@ -43,7 +42,7 @@ process.on('uncaughtException', (err) => {
 });
 
 if (shouldShowVersion) {
-  printLine(pkg.version);
+  printLine(version);
   process.exit();
 }
 
@@ -52,41 +51,49 @@ if (shouldShowHelp) {
   process.exit();
 }
 
-function insert(pathString, status) {
-  let directoryName = prettyPath(pathString);
-  status.directory = directoryName;
-  statuses.push(status);
-
-  let methodName = colorForStatus(status);
+const pushToTable = (status: ExtendedGitStatus) => {
+  if (showGitOnly && !status.git) {
+    return;
+  }
+  const methodName = colorForStatus(status);
 
   if (!((argv.attention || argv.a) && methodName === 'grey')) {
     table.push(
       C.columnsOrder.map((key) =>
         key === 'directory'
-          ? directoryName
+          ? status.directory
           : checkAndGetEmptyString(status, key, methodName)
       )
     );
   }
+};
+
+function insertStatuses(statuses: ExtendedGitStatus[]) {
+  statuses.map((status) => pushToTable(status));
 }
 
-function checkAndGetEmptyString(status, key, methodName) {
+function checkAndGetEmptyString(
+  status: ExtendedGitStatus,
+  key: keyof ExtendedGitStatus,
+  methodName: typeof ForegroundColor
+) {
   return chalk[methodName](status[key] || '-');
 }
 
-function simpleStatus(status) {
+function simpleStatus(status: ExtendedGitStatus) {
   //simple comma and newline separated output for machine readability
-  let str = [];
+  const str = [];
   for (let i = 0; i < C.simple.length; i++) {
     str.push(status[C.simple[i]]);
   }
   return str.join(',');
 }
 
-const simple = (statuses) => statuses.map((status) => simpleStatus(status));
+const simple = (statuses: Array<ExtendedGitStatus>) =>
+  statuses.map((status: ExtendedGitStatus) => simpleStatus(status));
 
-const finish = (compactness) => () => {
-  process.stdout.clearLine(); // clear current text
+const finish = (compactness: string) => () => {
+  process.stdout.clearLine(0); // clear current text
   process.stdout.cursorTo(0); // move cursor to beginning of line
 
   if (argv.sort) {
@@ -96,16 +103,12 @@ const finish = (compactness) => () => {
   if (argv.simple || argv.s) {
     printLine(simple(statuses).join('\n'));
   } else {
-    printLine(
-      chalk.supportsColor
-        ? table.toString()
-        : chalk.stripColor(table.toString())
-    );
+    printLine(table.toString());
   }
   if (compactness !== C.COMPACTNESS_LEVELS.NONE) {
-    let str = [];
-    Object.keys(C.headers).map(function (key) {
-      let header = C.headers[key];
+    const str: string[] = [];
+    Object.keys(C.headers).map((key: string) => {
+      const header = C.headers[key as TableHeader];
       str.push(chalk.cyan(header.short) + ': ' + header.long);
     });
     if (compactness !== C.COMPACTNESS_LEVELS.HIGH) {
@@ -114,7 +117,7 @@ const finish = (compactness) => () => {
   }
 };
 
-const listRepos = (_dirs) => {
+const listRepos = (_dirs: string[]) => {
   const spinner = startSpinner();
   const compactness = getCompactness(argv);
 
@@ -127,17 +130,17 @@ const listRepos = (_dirs) => {
     .then((files) =>
       Promise.all(
         files.map((file) =>
-          fs.stat(file).then((stat) => ({ file, stat }), printLine)
+          fs.stat(file).then(
+            (stat: Stat['stat']): Stat => ({ file, stat }),
+            () => ({ file, stat: null })
+          )
         )
       )
     )
-    .then((statuses) =>
-      processDirectory(statuses, { debug, insert, C, showGitOnly })
-    )
-    .then((statuses) => {
-      stopSpinner(spinner);
-      return finish(compactness)(statuses);
-    })
+    .then((statuses: Stat[]) => processDirectories(statuses))
+    .then((statuses) => insertStatuses(statuses))
+    .then(() => stopSpinner(spinner))
+    .then(() => finish(compactness)())
     .catch((err) => {
       throw err;
     });
