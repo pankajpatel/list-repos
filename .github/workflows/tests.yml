@@ -10,6 +10,7 @@ on:
       - src/*
       - '*.json'
       - yarn.lock
+      - '**/*.yml'
   pull_request:
     paths:
       - '!*.MD'
