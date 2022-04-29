@@ -1,31 +1,36 @@
 #!/usr/bin/env node
 
 import path from 'path';
+import chalk from 'chalk';
 import fs from 'fs/promises';
 import Table from 'cli-table';
 import minimist from 'minimist';
 import UpdateNotifier from 'update-notifier';
-import chalk, { ForegroundColor } from 'chalk';
 
 import {
   getHelp,
   stopSpinner,
   startSpinner,
-  colorForStatus,
   processDirectories,
 } from './functions';
-import C from './constants';
+import C, { SORT_DIRECTIONS, SORT_FUNCTIONS } from './constants';
 import { name, version } from '../package.json';
 import { initTable } from './functions/initTable';
 import { getCompactness } from './functions/getCompactness';
+import { pushToTable } from './functions/pushToTable';
 
 const argv = minimist(process.argv.slice(2));
 
 const printLine = console.log;
 const showGitOnly = argv.gitonly || argv.g;
 const shouldShowHelp = argv.help || argv.h;
+const needsAttention = argv.attention || argv.a;
 const shouldShowVersion = argv.version || argv.v;
+const shouldShowSimpleOutput = argv.simple || argv.s;
 const dirs = argv._.length ? argv._ : [process.cwd()];
+const shouldSort = Boolean(argv.sort);
+const sortDirection: string =
+  shouldSort && typeof argv.sort === 'string' ? argv.sort : SORT_DIRECTIONS.ASC;
 const debug = Boolean(argv.debug) ? printLine : C.NOOP;
 
 let table: Table;
@@ -51,36 +56,7 @@ if (shouldShowHelp) {
   process.exit();
 }
 
-const pushToTable = (status: ExtendedGitStatus) => {
-  if (showGitOnly && !status.git) {
-    return;
-  }
-  const methodName = colorForStatus(status);
-
-  if (!((argv.attention || argv.a) && methodName === 'grey')) {
-    table.push(
-      C.columnsOrder.map((key) =>
-        key === 'directory'
-          ? status.directory
-          : checkAndGetEmptyString(status, key, methodName)
-      )
-    );
-  }
-};
-
-function insertStatuses(statuses: ExtendedGitStatus[]) {
-  statuses.map((status) => pushToTable(status));
-}
-
-function checkAndGetEmptyString(
-  status: ExtendedGitStatus,
-  key: keyof ExtendedGitStatus,
-  methodName: typeof ForegroundColor
-) {
-  return chalk[methodName](status[key] || '-');
-}
-
-function simpleStatus(status: ExtendedGitStatus) {
+function getLineForSimpleStatus(status: ExtendedGitStatus) {
   //simple comma and newline separated output for machine readability
   const str = [];
   for (let i = 0; i < C.simple.length; i++) {
@@ -89,22 +65,23 @@ function simpleStatus(status: ExtendedGitStatus) {
   return str.join(',');
 }
 
-const simple = (statuses: Array<ExtendedGitStatus>) =>
-  statuses.map((status: ExtendedGitStatus) => simpleStatus(status));
+const prepareSimpleOutput = (statuses: Array<ExtendedGitStatus>) =>
+  statuses.map((status: ExtendedGitStatus) => getLineForSimpleStatus(status));
 
 const finish = (compactness: string) => () => {
   process.stdout.clearLine(0); // clear current text
   process.stdout.cursorTo(0); // move cursor to beginning of line
 
-  if (argv.sort) {
-    table.sort((a, b) => a[0] - b[0]);
+  if (shouldSort) {
+    table.sort(SORT_FUNCTIONS[sortDirection]);
   }
 
-  if (argv.simple || argv.s) {
-    printLine(simple(statuses).join('\n'));
+  if (shouldShowSimpleOutput) {
+    printLine(prepareSimpleOutput(statuses).join('\n'));
   } else {
     printLine(table.toString());
   }
+  // Table header abbreviations
   if (compactness !== C.COMPACTNESS_LEVELS.NONE) {
     const str: string[] = [];
     Object.keys(C.headers).map((key: string) => {
@@ -138,7 +115,11 @@ const listRepos = (_dirs: string[]) => {
       )
     )
     .then((statuses: Stat[]) => processDirectories(statuses))
-    .then((statuses) => insertStatuses(statuses))
+    .then((statuses) => {
+      statuses.map((status) =>
+        pushToTable(table, { showGitOnly, needsAttention })(status)
+      );
+    })
     .then(() => stopSpinner(spinner))
     .then(() => finish(compactness)())
     .catch((err) => {
