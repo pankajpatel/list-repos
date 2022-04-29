@@ -29,7 +29,7 @@ export const COMPACTNESS_LEVELS = {
 };
 
 const HEADERS: Record<TableHeader, Record<TableHeaderType, string>> = {
-  directory: {
+  displayPath: {
     long: 'Directory',
     short: 'DIR',
   },
@@ -55,12 +55,25 @@ const HEADERS: Record<TableHeader, Record<TableHeaderType, string>> = {
   },
 };
 
+export const SORT_DIRECTIONS: Record<string, string> = {
+  ASC: 'ASC',
+  DESC: 'DESC',
+};
+
+export const SORT_FUNCTIONS: Record<
+  keyof typeof SORT_DIRECTIONS,
+  (a: string, b: string) => number
+> = {
+  ASC: (a: string, b: string) => Number(a[0]) - Number(b[0]),
+  DESC: (a: string, b: string) => Number(b[0]) - Number(a[0]),
+};
+
 export default {
   defaultHeaderColor: 'cyan' as typeof ForegroundColor,
   updateInterval: 2, //days only
   daysMultiplier: 1000 * 60 * 60 * 24,
   columnsOrder: [
-    'directory',
+    'displayPath',
     'branch',
     'ahead',
     'dirty',
@@ -69,7 +82,7 @@ export default {
   ] as Array<TableHeader>,
   headers: HEADERS,
   simple: [
-    'directory',
+    'displayPath',
     'branch',
     'ahead',
     'dirty',

@@ -3,7 +3,7 @@ declare module 'git-state';
 type TableHeaderType = 'long' | 'short';
 
 type TableHeader =
-  | 'directory'
+  | 'displayPath'
   | 'branch'
   | 'ahead'
   | 'dirty'
@@ -27,7 +27,7 @@ type GitStatus = {
 interface ExtendedGitStatus extends GitStatus {
   git: boolean;
   file: string;
-  directory: string;
+  displayPath: string;
 }
 
 interface InsertFn {
