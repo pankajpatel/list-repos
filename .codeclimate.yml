@@ -15,4 +15,4 @@ ratings:
   paths:
   - "**.js"
   - "**.module"
-exclude_paths: []
+exclude_paths: [ '**/*.spec.ts' ]
