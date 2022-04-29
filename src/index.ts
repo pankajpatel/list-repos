@@ -108,8 +108,8 @@ const listRepos = (_dirs: string[]) => {
       Promise.all(
         files.map((file) =>
           fs.stat(file).then(
-            (stat: Stat['stat']): Stat => ({ file, stat }),
-            () => ({ file, stat: null })
+            (stat: Stat['stat']): Stat => ({ path: file, stat }),
+            () => ({ path: file, stat: null })
           )
         )
       )

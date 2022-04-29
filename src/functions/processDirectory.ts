@@ -4,10 +4,6 @@ import { gitCheck } from './gitCheck';
 import { prettyPath } from './prettyPath';
 
 const buildRepoState = (path: string, repoState: GitStatus | null) => ({
-  // Deprecated: file, directory
-  file: path,
-  directory: prettyPath(path),
-
   path,
   displayPath: prettyPath(path),
   git: Boolean(repoState),
@@ -15,26 +11,26 @@ const buildRepoState = (path: string, repoState: GitStatus | null) => ({
 });
 
 export const processNonGitDir = (stat: Stat): PromiseLike<ExtendedGitStatus> =>
-  Promise.resolve(buildRepoState(stat.file, null));
+  Promise.resolve(buildRepoState(stat.path, null));
 
 export const processGitDir = (stat: Stat): PromiseLike<ExtendedGitStatus> =>
-  gitCheck(stat.file).then(
+  gitCheck(stat.path).then(
     (gitStatus: GitStatus): ExtendedGitStatus =>
-      buildRepoState(stat.file, gitStatus)
+      buildRepoState(stat.path, gitStatus)
   );
 
 export const processDirectory = (stat: Stat) => {
-  if (!stat || !stat.file || !stat.stat) {
-    return Promise.resolve(buildRepoState(stat?.file ?? '', null));
+  if (!stat || !stat.path || !stat.stat) {
+    return Promise.resolve(buildRepoState(stat?.path ?? '', null));
   }
 
   if (!stat.stat.isDirectory()) {
-    return Promise.resolve(buildRepoState(stat.file, null));
+    return Promise.resolve(buildRepoState(stat.path, null));
   }
 
   return Promise.resolve()
     .catch(() => processNonGitDir(stat))
-    .then(() => isGit(stat.file))
+    .then(() => isGit(stat.path))
     .then((isDirGit) =>
       !isDirGit ? processNonGitDir(stat) : processGitDir(stat)
     );

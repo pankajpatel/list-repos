@@ -11,7 +11,7 @@ type TableHeader =
   | 'stashes';
 
 type Stat = {
-  file: string;
+  path: string;
   stat: FileSystem.Stats | null;
 };
 
@@ -26,12 +26,12 @@ type GitStatus = {
 
 interface ExtendedGitStatus extends GitStatus {
   git: boolean;
-  file: string;
+  path: string;
   displayPath: string;
 }
 
 interface InsertFn {
-  (file: string, gitStatus: GitStatus): void;
+  (path: string, gitStatus: GitStatus): void;
 }
 
 interface DebugFn {
