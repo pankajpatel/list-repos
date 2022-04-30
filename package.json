@@ -4,9 +4,13 @@
   "description": "List all the repos, their HEADs and clean status in the Current Directory or the Supplied Directory",
   "main": "dist/index.cjs",
   "type": "commonjs",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "build": "rollup --config",
     "typecheck": "tsc --noEmit --checkJs false",
     "prepare": "husky install",
