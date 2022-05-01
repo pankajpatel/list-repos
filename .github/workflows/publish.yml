@@ -22,7 +22,15 @@ jobs:
       - uses: actions/upload-artifact@master
         with:
           name: publish-artifact
-          path: .
+          path: |
+            .
+            !./node_modules
+            !./.git
+            !./.husky
+            !./.github
+            !./.vscode
+          if-no-files-found: error
+
 
   publish-npm:
     needs: [ build ]
