@@ -8,7 +8,31 @@ on:
     types: [created]
 
 jobs:
-  build:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - name: node_modules cache
+        id: node-modules-cache
+        uses: actions/cache@v2
+        env:
+          cache-name: node-modules-yarn
+          cache-fingerprint: ${{ env.node-version }}-${{ hashFiles('yarn.lock') }}
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.cache-fingerprint }}
+          restore-keys: ${{ runner.os }}-${{ env.cache-name }}
+
+      - name: Yarn install
+        # called at most once for the workflow by the "setup" job
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: yarn install --prefer-offline --frozen-lockfile
+
+  publish-npm:
+    needs: [ setup ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,58 +41,24 @@ jobs:
           node-version: 14
           registry-url: https://registry.npmjs.org/
       - run: npm i -g yarn
-      - run: yarn install
+      - run: yarn install --prefer-offline --frozen-lockfile
       - run: yarn build
-      - uses: actions/upload-artifact@master
-        with:
-          name: publish-artifact
-          path: |
-            .
-            !./node_modules
-            !./.git
-            !./.husky
-            !./.github
-            !./.vscode
-            !stat
-          if-no-files-found: error
-
-
-  publish-npm:
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    steps:
-      - run: mkdir -p publish
-      - uses: actions/download-artifact@master
-        with:
-          name: publish-artifact
-          path: publish
-      - name: Display structure of downloaded files
-        run: ls -R
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org/
-      - run: cd publish
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
   publish-gpr:
-    needs: [ build ]
+    needs: [ setup ]
     runs-on: ubuntu-latest
     steps:
-      - run: mkdir -p publish
-      - uses: actions/download-artifact@master
-        with:
-          name: publish-artifact
-          path: publish
-      - name: Display structure of downloaded files
-        run: ls -R
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
-      - run: cd publish
+      - run: npm i -g yarn
+      - run: yarn install --prefer-offline --frozen-lockfile
+      - run: yarn build
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
