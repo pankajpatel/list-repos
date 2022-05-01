@@ -19,11 +19,20 @@ jobs:
       - run: npm i -g yarn
       - run: yarn install
       - run: yarn build
+      - uses: actions/upload-artifact@master
+        with:
+          name: publish-artifact
+          path: .
 
   publish-npm:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
+      - run: mkdir -p publish
+      - uses: actions/download-artifact@master
+        with:
+          name: publish-artifact
+          path: publish
       - uses: actions/setup-node@v3
         with:
           node-version: 14
@@ -36,6 +45,11 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
+      - run: mkdir -p publish
+      - uses: actions/download-artifact@master
+        with:
+          name: publish-artifact
+          path: publish
       - uses: actions/setup-node@v3
         with:
           node-version: 14
