@@ -44,11 +44,11 @@ jobs:
           path: publish
       - name: Display structure of downloaded files
         run: ls -R
-      - run: cd publish
       - uses: actions/setup-node@v3
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
+      - run: cd publish
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
@@ -64,11 +64,11 @@ jobs:
           path: publish
       - name: Display structure of downloaded files
         run: ls -R
-      - run: cd publish
       - uses: actions/setup-node@v3
         with:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
+      - run: cd publish
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
