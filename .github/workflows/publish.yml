@@ -29,6 +29,7 @@ jobs:
             !./.husky
             !./.github
             !./.vscode
+            !stat
           if-no-files-found: error
 
 
@@ -41,6 +42,8 @@ jobs:
         with:
           name: publish-artifact
           path: publish
+      - name: Display structure of downloaded files
+        run: ls -R
       - run: cd publish
       - uses: actions/setup-node@v3
         with:
@@ -59,6 +62,8 @@ jobs:
         with:
           name: publish-artifact
           path: publish
+      - name: Display structure of downloaded files
+        run: ls -R
       - run: cd publish
       - uses: actions/setup-node@v3
         with:
