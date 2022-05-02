@@ -1,6 +1,8 @@
-const C = require('../constants');
+import C from '../constants';
 
-const getCompactness = (cliArgs = argv) => {
+export const getCompactness = (
+  cliArgs: Record<string, boolean | string | undefined>
+) => {
   const compact = cliArgs.compact || cliArgs.c;
 
   switch (compact) {
@@ -13,8 +15,4 @@ const getCompactness = (cliArgs = argv) => {
     default:
       return C.COMPACTNESS_LEVELS.NONE;
   }
-};
-
-module.exports = {
-  getCompactness,
 };

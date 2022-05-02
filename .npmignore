@@ -1,0 +1,15 @@
+!dist
+.github
+.husky
+.vscode
+stats
+src
+.codeclimate.yml
+.editorconfig
+.eslintignore
+.eslintrc.json
+.gitignore
+.prettier*
+rollup.config.js
+tsconfig.json
+jest.config.js

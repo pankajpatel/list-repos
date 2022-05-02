@@ -1,7 +1,7 @@
-const pkg = require('../../package');
-const { optionsText } = require('../constants');
+import pkg from '../../package.json';
+import { optionsText } from '../constants';
 
-function getHelp() {
+export function getHelp() {
   const lines = [
     `${pkg.name} ${pkg.version}`,
     pkg.description,
@@ -11,7 +11,3 @@ function getHelp() {
   ];
   return lines.join('\n');
 }
-
-module.exports = {
-  getHelp: getHelp,
-};
