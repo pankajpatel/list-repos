@@ -35,19 +35,18 @@
   },
   "homepage": "https://github.com/pankajpatel/list-repos#readme",
   "dependencies": {
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-typescript": "^8.3.2",
     "chalk": "~4.1.2",
     "cli-spinner": "^0.2.5",
     "cli-table": "^0.3.4",
     "git-state": "^4.1.0",
     "minimist": "^1.2.0",
-    "type-fest": "^2.12.2",
     "typescript": "^4.6.3",
     "update-notifier": "^5.1.0"
   },
   "devDependencies": {
+    "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.2.1",
+    "@rollup/plugin-typescript": "^8.3.2",
     "@types/cli-spinner": "^0.2.1",
     "@types/cli-table": "^0.3.0",
     "@types/jest": "^27.4.1",
@@ -67,7 +66,8 @@
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-preserve-shebang": "^1.0.1",
     "rollup-plugin-shebang": "^0.1.5",
-    "ts-jest": "^27.1.4"
+    "ts-jest": "^27.1.4",
+    "type-fest": "^2.12.2"
   },
   "lint-staged": {
     "*.js": [
