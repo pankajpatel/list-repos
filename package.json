@@ -1,13 +1,22 @@
 {
   "name": "list-repos",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "description": "List all the repos, their HEADs and clean status in the Current Directory or the Supplied Directory",
-  "main": "cli.js",
+  "main": "dist/index.cjs",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "build": "rollup --config",
+    "typecheck": "tsc --noEmit --checkJs false",
     "prepare": "husky install",
-    "pre-commit": "npm test && lint-staged"
+    "pre-commit": "yarn test && lint-staged && yarn run typecheck && yarn build"
   },
+  "types": "./index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pankajpatel/list-repos.git"
@@ -17,7 +26,7 @@
     "cli"
   ],
   "bin": {
-    "list-repos": "cli.js"
+    "list-repos": "dist/index.cjs"
   },
   "author": "Pankaj Patel <patel.pankaj@live.in>",
   "license": "MIT",
@@ -26,21 +35,39 @@
   },
   "homepage": "https://github.com/pankajpatel/list-repos#readme",
   "dependencies": {
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-typescript": "^8.3.2",
     "chalk": "~4.1.2",
     "cli-spinner": "^0.2.5",
     "cli-table": "^0.3.4",
     "git-state": "^4.1.0",
     "minimist": "^1.2.0",
+    "type-fest": "^2.12.2",
+    "typescript": "^4.6.3",
     "update-notifier": "^5.1.0"
   },
   "devDependencies": {
-    "eslint": "^8.6.0",
+    "@rollup/plugin-node-resolve": "^13.2.1",
+    "@types/cli-spinner": "^0.2.1",
+    "@types/cli-table": "^0.3.0",
+    "@types/jest": "^27.4.1",
+    "@types/minimist": "^1.2.2",
+    "@types/update-notifier": "^5.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.20.0",
+    "@typescript-eslint/parser": "^5.20.0",
+    "eslint": "^8.14.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.0",
     "jest": "^27.4.5",
     "lint-staged": "^12.3.8",
-    "prettier": "2.6.2"
+    "prettier": "2.6.2",
+    "rollup": "^2.70.2",
+    "rollup-plugin-build-statistics": "^0.0.19",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-preserve-shebang": "^1.0.1",
+    "rollup-plugin-shebang": "^0.1.5",
+    "ts-jest": "^27.1.4"
   },
   "lint-staged": {
     "*.js": [

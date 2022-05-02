@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "es2015",
+
+    /* Modules */
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+
+
+    /* JavaScript Support */
+    "allowJs": true,
+    // "checkJs": true,
+
+    /* Emit */
+    "rootDir": "./",
+    "outDir": "./dist",
+    "removeComments": true,
+
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Type Checking */
+    "strict": true,
+
+    /* Completeness */
+    "skipLibCheck": true
+  },
+  "compileOnSave": true,
+  "exclude": [
+    "node_modules",
+    ".vscode",
+    ".github",
+    ".husky",
+    "dist",
+    "**/*.spec.ts"
+  ]
+}
