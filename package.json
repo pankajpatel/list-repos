@@ -1,6 +1,6 @@
 {
   "name": "list-repos",
-  "version": "1.0.0-beta.9",
+  "version": "1.0.0-beta.10",
   "description": "List all the repos, their HEADs and clean status in the Current Directory or the Supplied Directory",
   "main": "dist/index.cjs",
   "type": "commonjs",
@@ -26,7 +26,7 @@
     "cli"
   ],
   "bin": {
-    "list-repos": "cli.js"
+    "list-repos": "dist/index.cjs"
   },
   "author": "Pankaj Patel <patel.pankaj@live.in>",
   "license": "MIT",
