@@ -3,7 +3,10 @@ import constants from '../constants';
 import { gitCheck } from './gitCheck';
 import { prettyPath } from './prettyPath';
 
-const buildRepoState = (path: string, repoState: GitStatus | null) => ({
+const buildRepoState = (
+  path: string,
+  repoState: GitStatus | null
+): ExtendedGitStatus => ({
   path,
   displayPath: prettyPath(path),
   git: Boolean(repoState),
@@ -19,7 +22,9 @@ export const processGitDir = (stat: Stat): PromiseLike<ExtendedGitStatus> =>
       buildRepoState(stat.path, gitStatus)
   );
 
-export const processDirectory = (stat: Stat) => {
+export const processDirectory = (
+  stat: Stat
+): PromiseLike<ExtendedGitStatus> => {
   if (!stat || !stat.path || !stat.stat) {
     return Promise.resolve(buildRepoState(stat?.path ?? '', null));
   }
@@ -36,5 +41,7 @@ export const processDirectory = (stat: Stat) => {
     );
 };
 
-export const processDirectories = (stats: Stat[]) =>
+export const processDirectories = (
+  stats: Stat[]
+): PromiseLike<ExtendedGitStatus[]> =>
   Promise.all(stats.map((status: Stat) => processDirectory(status)));

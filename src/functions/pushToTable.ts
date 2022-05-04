@@ -13,8 +13,7 @@ function checkAndGetEmptyString(
 }
 
 export const pushToTable =
-  (table: Table, options: { showGitOnly: boolean; needsAttention: boolean }) =>
-  (status: ExtendedGitStatus) => {
+  (table: Table, options: CommandOptions) => (status: ExtendedGitStatus) => {
     if (options.showGitOnly && !status.git) {
       return;
     }

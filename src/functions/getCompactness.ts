@@ -1,18 +1,18 @@
-import C from '../constants';
+import { COMPACTNESS_LEVELS } from '../constants';
 
 export const getCompactness = (
   cliArgs: Record<string, boolean | string | undefined>
-) => {
+): string => {
   const compact = cliArgs.compact || cliArgs.c;
 
   switch (compact) {
     case 's':
-      return C.COMPACTNESS_LEVELS.MEDIUM;
+      return COMPACTNESS_LEVELS.MEDIUM;
     case 'so':
-      return C.COMPACTNESS_LEVELS.HIGH;
+      return COMPACTNESS_LEVELS.HIGH;
     case true:
-      return C.COMPACTNESS_LEVELS.LOW;
+      return COMPACTNESS_LEVELS.LOW;
     default:
-      return C.COMPACTNESS_LEVELS.NONE;
+      return COMPACTNESS_LEVELS.NONE;
   }
 };
