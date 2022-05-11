@@ -28,6 +28,7 @@ jobs:
 
   coverage:
     needs: [ test ]
+    if: github.event.pull_request.merged == true
     name: coverage
     runs-on: ubuntu-latest
     steps:
