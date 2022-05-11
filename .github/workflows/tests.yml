@@ -28,7 +28,7 @@ jobs:
 
   coverage:
     needs: [ test ]
-    if: github.event.pull_request.merged == true
+    if: ${{ github.event_name != 'pull_request' }}
     name: coverage
     runs-on: ubuntu-latest
     steps:
