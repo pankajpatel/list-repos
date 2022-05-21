@@ -10,9 +10,11 @@ type TableHeader =
   | 'untracked'
   | 'stashes';
 
+type FSStat = FileSystem.Stats;
+
 type Stat = {
   path: string;
-  stat: FileSystem.Stats | null;
+  stat: FSStat;
 };
 
 type GitStatus = {
@@ -30,17 +32,20 @@ interface ExtendedGitStatus extends GitStatus {
   displayPath: string;
 }
 
-interface InsertFn {
-  (path: string, gitStatus: GitStatus): void;
-}
-
 interface DebugFn {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (...args: any[]): void;
 }
 
-type Options = {
-  debug: DebugFn;
-  insert: InsertFn;
+interface CommandOptions {
+  compactness: string;
   showGitOnly: boolean;
-};
+  shouldShowVersion: boolean;
+  shouldShowHelp: boolean;
+  shouldShowSimpleOutput: boolean;
+  shouldSort: boolean;
+  sortDirection: keyof SORT_DIRECTIONS;
+  needsAttention: boolean;
+  debug: DebugFn;
+  cwd: string;
+}
