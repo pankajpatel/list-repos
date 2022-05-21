@@ -58,6 +58,8 @@ const HEADERS: Record<TableHeader, Record<TableHeaderType, string>> = {
 export const SORT_DIRECTIONS: Record<string, string> = {
   ASC: 'ASC',
   DESC: 'DESC',
+  asc: 'ASC',
+  desc: 'DESC',
 };
 
 export const SORT_FUNCTIONS: Record<
