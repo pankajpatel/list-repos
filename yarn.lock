@@ -803,9 +803,9 @@
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
 "@types/update-notifier@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@types/update-notifier/-/update-notifier-6.0.0.tgz#c64991e76c7364a95e4945571642cffb5f474bb0"
-  integrity sha512-YspJF/snMvH7hYHED2BsnFOxQWGjqaKqZDRdJKWHfqJ2ZjehmL5YM/9gSHw/6Bv1fuHfxHjRhXZ3MNiC67v/Tg==
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@types/update-notifier/-/update-notifier-6.0.1.tgz#b1891f56be7ef4f124058bb6ca6934a7da524c78"
+  integrity sha512-J6x9qtPDKgJGLdTjiswhhiL5QJoZv7eQb44t90mWb4Cf3tnuDRMvg8je9PoxDJZiGog0bfoFVcVHBq4RcItRZg==
   dependencies:
     "@types/configstore" "*"
     boxen "^7.0.0"
