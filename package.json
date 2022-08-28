@@ -25,9 +25,7 @@
     "git",
     "cli"
   ],
-  "bin": {
-    "list-repos": "dist/index.cjs"
-  },
+  "bin": "dist/index.cjs",
   "author": "Pankaj Patel <patel.pankaj@live.in>",
   "license": "MIT",
   "bugs": {
@@ -74,5 +72,6 @@
       "eslint",
       "prettier --ignore-unknown --write"
     ]
-  }
+  },
+  "packageManager": "yarn@3.2.3"
 }
