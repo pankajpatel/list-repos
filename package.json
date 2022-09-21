@@ -65,7 +65,7 @@
     "rollup-plugin-preserve-shebang": "^1.0.1",
     "rollup-plugin-shebang": "^0.1.5",
     "ts-jest": "^29.0.0",
-    "type-fest": "^2.12.2"
+    "type-fest": "^3.0.0"
   },
   "lint-staged": {
     "*.js": [

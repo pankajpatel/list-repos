@@ -4187,7 +4187,7 @@ __metadata:
     rollup-plugin-preserve-shebang: ^1.0.1
     rollup-plugin-shebang: ^0.1.5
     ts-jest: ^29.0.0
-    type-fest: ^2.12.2
+    type-fest: ^3.0.0
     typescript: ^4.6.3
     update-notifier: ^6.0.2
   bin:
@@ -5720,10 +5720,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^2.12.2, type-fest@npm:^2.13.0":
+"type-fest@npm:^2.13.0":
   version: 2.18.1
   resolution: "type-fest@npm:2.18.1"
   checksum: 2aabebe88d4cfa8d9576058ee475f95efd878a85a6cbe0b4f4e1d45c891501d12b29057a0baddd5fc5652b128622308a499ac5eed68c69ebb05b1c960d2943cf
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "type-fest@npm:3.0.0"
+  checksum: 04c00bb3db91d7b98cddb948840926e5703384fb240550a2f1a152cf0781e293efd7001bb013ad84bd7b388cdb052bb6445afdc2d2be8f5529e3bc0ba03bb938
   languageName: node
   linkType: hard
 
