@@ -1099,24 +1099,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-typescript@npm:^8.3.2":
-  version: 8.3.4
-  resolution: "@rollup/plugin-typescript@npm:8.3.4"
+"@rollup/plugin-typescript@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "@rollup/plugin-typescript@npm:9.0.0"
   dependencies:
-    "@rollup/pluginutils": ^3.1.0
-    resolve: ^1.17.0
+    "@rollup/pluginutils": ^4.2.1
+    resolve: ^1.22.1
   peerDependencies:
-    rollup: ^2.14.0
+    rollup: ^2.14.0||^3.0.0
     tslib: "*"
     typescript: ">=3.7.0"
   peerDependenciesMeta:
+    rollup:
+      optional: true
     tslib:
       optional: true
-  checksum: 3a86664a1c8a00d715bd61fb3b2d739e1a3eb8c7a8e695a2ac9846e0d93872e8db0aa5695f952635bdbea8f1a5c79bdb643ce0d0eaa244e6cbfadce3f50ab8d9
+  checksum: 4621aaf796b75aa84f16f3a19c9525c09540ecc26ad4509c9ea7fd0af16968b8316899616ee0f8624e52304b6081d403da3ef3caaaa67b13ef6cda375f579f1f
   languageName: node
   linkType: hard
 
-"@rollup/pluginutils@npm:^3.0.8, @rollup/pluginutils@npm:^3.1.0":
+"@rollup/pluginutils@npm:^3.0.8":
   version: 3.1.0
   resolution: "@rollup/pluginutils@npm:3.1.0"
   dependencies:
@@ -4188,7 +4190,7 @@ __metadata:
   dependencies:
     "@rollup/plugin-json": ^4.1.0
     "@rollup/plugin-node-resolve": ^15.0.0
-    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-typescript": ^9.0.0
     "@types/cli-spinner": ^0.2.1
     "@types/cli-table": ^0.3.0
     "@types/jest": ^29.0.0
@@ -5089,7 +5091,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:^1.17.0, resolve@npm:^1.20.0":
+"resolve@npm:^1.20.0":
   version: 1.22.0
   resolution: "resolve@npm:1.22.0"
   dependencies:
@@ -5115,7 +5117,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@^1.17.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>":
+"resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>":
   version: 1.22.0
   resolution: "resolve@patch:resolve@npm%3A1.22.0#~builtin<compat/resolve>::version=1.22.0&hash=07638b"
   dependencies:
