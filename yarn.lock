@@ -4186,7 +4186,7 @@ __metadata:
     lint-staged: ^13.0.2
     minimist: ^1.2.0
     prettier: 2.7.1
-    rollup: ^2.70.2
+    rollup: ^3.0.0
     rollup-plugin-build-statistics: ^0.0.19
     rollup-plugin-delete: ^2.0.0
     rollup-plugin-preserve-shebang: ^1.0.1
@@ -5204,9 +5204,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:^2.70.2":
-  version: 2.78.1
-  resolution: "rollup@npm:2.78.1"
+"rollup@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "rollup@npm:3.0.0"
   dependencies:
     fsevents: ~2.3.2
   dependenciesMeta:
@@ -5214,7 +5214,7 @@ __metadata:
       optional: true
   bin:
     rollup: dist/bin/rollup
-  checksum: 9034814383ca5bdb4bea6d499270aeb31cdb0bb884f81b0c6a1d19c63cc973f040e6ee09b7af8a7169dd231c090f4b44ef8b99c4bfdf884aceeb3dcefb8cfa14
+  checksum: fe28da8fcda28204124b4ba2b7d5d538099c1d9b5b053468a062616d3520905ef53e0282b54e2ef9d7008598b1b40a686ec79da4d4d5500650b08c68564bc4de
   languageName: node
   linkType: hard
 
