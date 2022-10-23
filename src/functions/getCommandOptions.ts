@@ -4,6 +4,7 @@ import constants, { SORT_DIRECTIONS } from '../constants';
 
 const extractOptions = (argv: minimist.ParsedArgs) => ({
   // Output Flags & Options
+  compactness: getCompactness(argv),
   showGitOnly: argv.gitonly || argv.g,
   needsAttention: argv.attention || argv.a,
   shouldShowSimpleOutput: argv.simple || argv.s,
@@ -34,7 +35,5 @@ export const getCommandOptions = (
     // Sorting options
     shouldSort,
     sortDirection,
-    // Output Flags & Options
-    compactness: getCompactness(argv),
   };
 };

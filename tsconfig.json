@@ -8,9 +8,8 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
 
-
     /* JavaScript Support */
-    "allowJs": true,
+    "allowJs": false,
     // "checkJs": true,
 
     /* Emit */
