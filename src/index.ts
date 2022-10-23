@@ -66,7 +66,7 @@ const listRepos = (options: CommandOptions) => {
     .then((_statuses) => statuses.push(..._statuses))
     .then(() => stopSpinner(spinner))
     .then(() => finish(options)(statuses, table))
-    .then(printLine)
+    .then((t) => printLine(t.join('').toString()))
     .catch((err) => {
       throw err;
     });
