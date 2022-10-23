@@ -37,9 +37,12 @@ if (cmdOptions.shouldShowHelp) {
   process.exit();
 }
 
-const readDirAndBuildStats = (dir: string) =>
+const readDirAndBuildStats = (dir: string, ignore?: string | RegExp) =>
   Promise.resolve()
     .then(() => fs.readdir(dir))
+    .then((files) =>
+      ignore ? files.filter((file) => !file.match(ignore)) : files
+    )
     .then((files) => files.map((file) => path.resolve(dir, file)))
     .then((files) =>
       Promise.all(
@@ -53,7 +56,7 @@ const readDirAndBuildStats = (dir: string) =>
     );
 
 const listRepos = (options: CommandOptions) => {
-  const { compactness, cwd } = options;
+  const { compactness, cwd, ignore } = options;
   const statuses: ExtendedGitStatus[] = [];
 
   const spinner = startSpinner();
@@ -61,7 +64,7 @@ const listRepos = (options: CommandOptions) => {
 
   return Promise.resolve()
     .then(() => printLine(chalk.green(cwd)))
-    .then(() => readDirAndBuildStats(cwd))
+    .then(() => readDirAndBuildStats(cwd, ignore))
     .then(processDirectories)
     .then((_statuses) => statuses.push(..._statuses))
     .then(() => stopSpinner(spinner))
