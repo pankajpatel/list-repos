@@ -8,6 +8,7 @@ const extractOptions = (argv: minimist.ParsedArgs) => ({
   showGitOnly: argv.gitonly || argv.g,
   needsAttention: argv.attention || argv.a,
   shouldShowSimpleOutput: argv.simple || argv.s,
+  ignore: argv.ignore || argv.i,
 
   // Help Flags
   shouldShowHelp: argv.help || argv.h,

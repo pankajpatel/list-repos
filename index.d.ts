@@ -48,4 +48,5 @@ interface CommandOptions {
   needsAttention: boolean;
   debug: DebugFn;
   cwd: string;
+  ignore?: string | RegExp;
 }
