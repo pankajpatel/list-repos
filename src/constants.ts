@@ -15,6 +15,7 @@ Options:
   --attention, -a       output only dirs which requires attention
                         also includes non git dirs, use -g to omit them
   --simple, -s          make the output more simple for easy grepping
+  --ignore, -i          ignore all dirs whose name matches this substring in the processed directory
 
 `;
 
