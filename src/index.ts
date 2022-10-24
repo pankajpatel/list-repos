@@ -37,11 +37,18 @@ if (cmdOptions.shouldShowHelp) {
   process.exit();
 }
 
-const readDirAndBuildStats = (dir: string, ignore?: string | RegExp) =>
+const readDirAndBuildStats = (
+  dir: string,
+  ignore?: string | RegExp,
+  match?: string | RegExp
+) =>
   Promise.resolve()
     .then(() => fs.readdir(dir))
     .then((files) =>
       ignore ? files.filter((file) => !file.match(ignore)) : files
+    )
+    .then((files) =>
+      match ? files.filter((file) => file.match(match)) : files
     )
     .then((files) => files.map((file) => path.resolve(dir, file)))
     .then((files) =>

@@ -49,4 +49,5 @@ interface CommandOptions {
   debug: DebugFn;
   cwd: string;
   ignore?: string | RegExp;
+  match?: string | RegExp;
 }

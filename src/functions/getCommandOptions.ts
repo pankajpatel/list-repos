@@ -9,6 +9,7 @@ const extractOptions = (argv: minimist.ParsedArgs) => ({
   needsAttention: argv.attention || argv.a,
   shouldShowSimpleOutput: argv.simple || argv.s,
   ignore: argv.ignore || argv.i,
+  match: argv.match || argv.m,
 
   // Help Flags
   shouldShowHelp: argv.help || argv.h,
