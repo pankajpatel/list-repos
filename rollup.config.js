@@ -1,10 +1,11 @@
-import del from 'rollup-plugin-delete';
-import json from '@rollup/plugin-json';
-import typescript from '@rollup/plugin-typescript';
-import shebang from 'rollup-plugin-preserve-shebang';
-import statistics from 'rollup-plugin-build-statistics';
+/* eslint-disable @typescript-eslint/no-var-requires */
+const del = require('rollup-plugin-delete');
+const json = require('@rollup/plugin-json');
+const typescript = require('@rollup/plugin-typescript');
+const shebang = require('rollup-plugin-preserve-shebang');
+const statistics = require('rollup-plugin-build-statistics');
 
-export default {
+module.exports = {
   input: 'src/index.ts',
   output: {
     file: 'dist/index.cjs',
