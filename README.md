@@ -7,16 +7,32 @@ This utility lists the current active branch on repos present in specified direc
 Read more at [time2hack.com/introducing-list-repos](https://time2hack.com/introducing-list-repos)
 
 To install the utility, simply do
+
 ```
 npm install -g list-repos
 ```
+
 And in few seconds(or minutes), it should be installed. If it gives error of Access rights, try with `sudo` and after you enter the password for `sudo`, it should install normally.
 
 To use the utility, type following on CLI,
+
 ```
 # Check for the current active branch on repos present in parent directory
 list-repos ../
 ```
+
+You can pass the following arguments:
+
+| **Parameter** | **Shorthand** | **Description**                                      |
+| ------------- | ------------- | ---------------------------------------------------- |
+| `--version`   | `-v`          | Version                                              |
+| `--help`      | `-h`          | Help                                                 |
+| `--ignore`    | `-i`          | Ignore matching substring                            |
+| `--match`     | `-m`          | Only matching substring                              |
+| `--gitonly`   | `-g`          | Show only git repos                                  |
+| `--attention` | `-a`          | Show repos which only needs attention                |
+| `--simple`    | `-s`          | Simple Output                                        |
+| `--compact`   | `-c`          | Compactness; no value = Low; `=s` Medium; `=so` High |
 
 And will comeup with this output:
 
