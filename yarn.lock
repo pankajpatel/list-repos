@@ -5297,8 +5297,8 @@ __metadata:
   linkType: hard
 
 "rollup@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "rollup@npm:3.0.0"
+  version: 3.19.1
+  resolution: "rollup@npm:3.19.1"
   dependencies:
     fsevents: ~2.3.2
   dependenciesMeta:
@@ -5306,7 +5306,7 @@ __metadata:
       optional: true
   bin:
     rollup: dist/bin/rollup
-  checksum: fe28da8fcda28204124b4ba2b7d5d538099c1d9b5b053468a062616d3520905ef53e0282b54e2ef9d7008598b1b40a686ec79da4d4d5500650b08c68564bc4de
+  checksum: f78198c6de224b26650c70b16db156762d1fcceeb375d34fb2c76fc5b23a78f712c3c881d3248e6f277a511589e20d50c247bcf5c7920f1ddc0a43cadf9f0140
   languageName: node
   linkType: hard
 
