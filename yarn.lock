@@ -1577,12 +1577,12 @@ __metadata:
   linkType: hard
 
 "@types/update-notifier@npm:^6.0.0":
-  version: 6.0.5
-  resolution: "@types/update-notifier@npm:6.0.5"
+  version: 6.0.6
+  resolution: "@types/update-notifier@npm:6.0.6"
   dependencies:
     "@types/configstore": "*"
     boxen: ^7.0.0
-  checksum: 4a0cf19c184ea2a9b409c2ed567bcd2cafafcce2ddf83d9921de8c7841b651358755f9076e702610f8b23529ee72a6d2be6e9381397fc3dcdc3567abfee85dde
+  checksum: b8834a550d6730331543f9b3fb8ff5ca84b08be980cbb8e58801050abecdb6c18ee31da31a9b5bf328e8c6430b1e67eb8e3f7ef14fdcfb37d4362b2646e71667
   languageName: node
   linkType: hard
 
