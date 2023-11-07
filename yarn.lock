@@ -1437,11 +1437,11 @@ __metadata:
   linkType: hard
 
 "@types/cli-spinner@npm:^0.2.1":
-  version: 0.2.2
-  resolution: "@types/cli-spinner@npm:0.2.2"
+  version: 0.2.3
+  resolution: "@types/cli-spinner@npm:0.2.3"
   dependencies:
     "@types/node": "*"
-  checksum: 1425b3aca3725b7185365a35102c87a48bab65809230bc696bc9bc104906ed1ff3cb4bdebe02e57b3b4183616e492be6b7283cd0a7a78755c93ae582e04d03ca
+  checksum: 1610b145f152b8b7a79856304430d80ea2460b7880ec70e288b9a77362590fd58503b5fc835de533e0ffba4934c03e97e9f6da7a7b083f1ba96572682d5b0797
   languageName: node
   linkType: hard
 
