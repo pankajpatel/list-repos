@@ -1577,12 +1577,12 @@ __metadata:
   linkType: hard
 
 "@types/update-notifier@npm:^6.0.0":
-  version: 6.0.7
-  resolution: "@types/update-notifier@npm:6.0.7"
+  version: 6.0.8
+  resolution: "@types/update-notifier@npm:6.0.8"
   dependencies:
     "@types/configstore": "*"
-    boxen: ^7.0.0
-  checksum: 92d69e85169c5c9bf050d0d3925672d92f561949ea9a138ac81bfcf08b806cdb45fdf057521bb0fb4919eba189c79dbf6235683511a301bdcf362aec0aac53bf
+    boxen: ^7.1.1
+  checksum: 385df38855383dd9f0521a14037dec386c30bbccfac7b2682d9fc0b5bc1bf09a307bb657d9aa637fc4afdb99e69b619fa3f0195f09eb3bdd57fdb86eb620a189
   languageName: node
   linkType: hard
 
@@ -2034,6 +2034,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"boxen@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "boxen@npm:7.1.1"
+  dependencies:
+    ansi-align: ^3.0.1
+    camelcase: ^7.0.1
+    chalk: ^5.2.0
+    cli-boxes: ^3.0.0
+    string-width: ^5.1.2
+    type-fest: ^2.13.0
+    widest-line: ^4.0.1
+    wrap-ansi: ^8.1.0
+  checksum: ad8833d5f2845b0a728fdf8a0bc1505dff0c518edcb0fd56979a08774b1f26cf48b71e66532179ccdfb9ed95b64aa008689cca26f7776f93f002b8000a683d76
+  languageName: node
+  linkType: hard
+
 "bplist-parser@npm:^0.2.0":
   version: 0.2.0
   resolution: "bplist-parser@npm:0.2.0"
@@ -2203,6 +2219,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"camelcase@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "camelcase@npm:7.0.1"
+  checksum: 86ab8f3ebf08bcdbe605a211a242f00ed30d8bfb77dab4ebb744dd36efbc84432d1c4adb28975ba87a1b8be40a80fbd1e60e2f06565315918fa7350011a26d3d
+  languageName: node
+  linkType: hard
+
 "caniuse-lite@npm:^1.0.30001332":
   version: 1.0.30001335
   resolution: "caniuse-lite@npm:1.0.30001335"
@@ -2210,7 +2233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:5.3.0":
+"chalk@npm:5.3.0, chalk@npm:^5.2.0":
   version: 5.3.0
   resolution: "chalk@npm:5.3.0"
   checksum: 623922e077b7d1e9dedaea6f8b9e9352921f8ae3afe739132e0e00c275971bdd331268183b2628cf4ab1727c45ea1f28d7e24ac23ce1db1eb653c414ca8a5a80
