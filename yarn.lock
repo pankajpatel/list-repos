@@ -1242,9 +1242,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-node-resolve@npm:^15.0.0":
-  version: 15.3.1
-  resolution: "@rollup/plugin-node-resolve@npm:15.3.1"
+"@rollup/plugin-node-resolve@npm:^16.0.0":
+  version: 16.0.0
+  resolution: "@rollup/plugin-node-resolve@npm:16.0.0"
   dependencies:
     "@rollup/pluginutils": ^5.0.1
     "@types/resolve": 1.20.2
@@ -1256,7 +1256,7 @@ __metadata:
   peerDependenciesMeta:
     rollup:
       optional: true
-  checksum: 2973db4da0e7ed97c35a8dd8878ed6b6781bcb03d72039f064d878f711b0290446348c5268aa1359d064787adc0d5cc35f662d35ea5a4fa9b0b3f9f17c678f41
+  checksum: 44e348dd3c25ae9642d1a73b085ff0dc0258f74e98c9a21089354b244d9834db265952b9ff9e1d490e227cd8084f8d0fbb2dc6ccfb8bbc4dac3081a619e66660
   languageName: node
   linkType: hard
 
@@ -4670,7 +4670,7 @@ __metadata:
   resolution: "list-repos@workspace:."
   dependencies:
     "@rollup/plugin-json": ^6.0.0
-    "@rollup/plugin-node-resolve": ^15.0.0
+    "@rollup/plugin-node-resolve": ^16.0.0
     "@rollup/plugin-typescript": ^12.0.0
     "@types/cli-spinner": ^0.2.1
     "@types/cli-table": ^0.3.0
