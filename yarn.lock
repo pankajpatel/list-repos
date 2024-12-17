@@ -6330,9 +6330,9 @@ __metadata:
   linkType: hard
 
 "type-fest@npm:^4.0.0":
-  version: 4.30.1
-  resolution: "type-fest@npm:4.30.1"
-  checksum: 4fa1baa4f14e6ae50663a210630a5e9cdc3e542168c8fe66cf6ec94b8cc1634cd5cb8b4e043c064a9d7fb62c70e1e043c68bc37cc54de8d171255d58d1e21ec2
+  version: 4.30.2
+  resolution: "type-fest@npm:4.30.2"
+  checksum: 861f7ae761fa11194743318a486c04b369f6f39060c8c24a099880478efa5c7562b72ad88c38fb7d7dc57111fb378b8922fceddaff363cfc002c6005a99d6bb6
   languageName: node
   linkType: hard
 
