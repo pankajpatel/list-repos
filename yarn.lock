@@ -1589,16 +1589,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/glob@npm:^7.1.1":
-  version: 7.2.0
-  resolution: "@types/glob@npm:7.2.0"
-  dependencies:
-    "@types/minimatch": "*"
-    "@types/node": "*"
-  checksum: 6ae717fedfdfdad25f3d5a568323926c64f52ef35897bcac8aca8e19bc50c0bd84630bbd063e5d52078b2137d8e7d3c26eabebd1a2f03ff350fff8a91e79fc19
-  languageName: node
-  linkType: hard
-
 "@types/graceful-fs@npm:^4.1.3":
   version: 4.1.5
   resolution: "@types/graceful-fs@npm:4.1.5"
@@ -1654,13 +1644,6 @@ __metadata:
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
   checksum: 97ed0cb44d4070aecea772b7b2e2ed971e10c81ec87dd4ecc160322ffa55ff330dace1793489540e3e318d90942064bb697cc0f8989391797792d919737b3b98
-  languageName: node
-  linkType: hard
-
-"@types/minimatch@npm:*":
-  version: 3.0.5
-  resolution: "@types/minimatch@npm:3.0.5"
-  checksum: c41d136f67231c3131cf1d4ca0b06687f4a322918a3a5adddc87ce90ed9dbd175a3610adee36b106ae68c0b92c637c35e02b58c8a56c424f71d30993ea220b92
   languageName: node
   linkType: hard
 
@@ -2712,19 +2695,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"del@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "del@npm:5.1.0"
+"del@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "del@npm:6.1.1"
   dependencies:
-    globby: ^10.0.1
-    graceful-fs: ^4.2.2
+    globby: ^11.0.1
+    graceful-fs: ^4.2.4
     is-glob: ^4.0.1
     is-path-cwd: ^2.2.0
-    is-path-inside: ^3.0.1
-    p-map: ^3.0.0
-    rimraf: ^3.0.0
+    is-path-inside: ^3.0.2
+    p-map: ^4.0.0
+    rimraf: ^3.0.2
     slash: ^3.0.0
-  checksum: d9e4ef2c1227230ed61291fc99bdcb084167c0fe580df5fa8b2524b511c09f0c51887edf7dc5ffaa6ecfb25c92a2ca185ec49d5233baf6c5fe50248ab1f13e57
+  checksum: 563288b73b8b19a7261c47fd21a330eeab6e2acd7c6208c49790dfd369127120dd7836cdf0c1eca216b77c94782a81507eac6b4734252d3bef2795cb366996b6
   languageName: node
   linkType: hard
 
@@ -3178,16 +3161,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.0.3":
-  version: 3.2.11
-  resolution: "fast-glob@npm:3.2.11"
+"fast-glob@npm:^3.2.9":
+  version: 3.3.3
+  resolution: "fast-glob@npm:3.3.3"
   dependencies:
     "@nodelib/fs.stat": ^2.0.2
     "@nodelib/fs.walk": ^1.2.3
     glob-parent: ^5.1.2
     merge2: ^1.3.0
-    micromatch: ^4.0.4
-  checksum: f473105324a7780a20c06de842e15ddbb41d3cb7e71d1e4fe6e8373204f22245d54f5ab9e2061e6a1c613047345954d29b022e0e76f5c28b1df9858179a0e6d7
+    micromatch: ^4.0.8
+  checksum: 0704d7b85c0305fd2cef37777337dfa26230fdd072dce9fb5c82a4b03156f3ffb8ed3e636033e65d45d2a5805a4e475825369a27404c0307f2db0c8eb3366fbd
   languageName: node
   linkType: hard
 
@@ -3493,19 +3476,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globby@npm:^10.0.1":
-  version: 10.0.2
-  resolution: "globby@npm:10.0.2"
+"globby@npm:^11.0.1":
+  version: 11.1.0
+  resolution: "globby@npm:11.1.0"
   dependencies:
-    "@types/glob": ^7.1.1
     array-union: ^2.1.0
     dir-glob: ^3.0.1
-    fast-glob: ^3.0.3
-    glob: ^7.1.3
-    ignore: ^5.1.1
-    merge2: ^1.2.3
+    fast-glob: ^3.2.9
+    ignore: ^5.2.0
+    merge2: ^1.4.1
     slash: ^3.0.0
-  checksum: 167cd067f2cdc030db2ec43232a1e835fa06217577d545709dbf29fd21631b30ff8258705172069c855dc4d5766c3b2690834e35b936fbff01ad0329fb95a26f
+  checksum: b4be8885e0cfa018fc783792942d53926c35c50b3aefd3fdcfb9d22c627639dc26bd2327a40a0b74b074100ce95bb7187bfeae2f236856aa3de183af7a02aea6
   languageName: node
   linkType: hard
 
@@ -3528,10 +3509,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graceful-fs@npm:4.2.10, graceful-fs@npm:^4.2.2, graceful-fs@npm:^4.2.6, graceful-fs@npm:^4.2.9":
+"graceful-fs@npm:4.2.10, graceful-fs@npm:^4.2.6, graceful-fs@npm:^4.2.9":
   version: 4.2.10
   resolution: "graceful-fs@npm:4.2.10"
   checksum: 3f109d70ae123951905d85032ebeae3c2a5a7a997430df00ea30df0e3a6c60cf6689b109654d6fdacd28810a053348c4d14642da1d075049e6be1ba5216218da
+  languageName: node
+  linkType: hard
+
+"graceful-fs@npm:^4.2.4":
+  version: 4.2.11
+  resolution: "graceful-fs@npm:4.2.11"
+  checksum: ac85f94da92d8eb6b7f5a8b20ce65e43d66761c55ce85ac96df6865308390da45a8d3f0296dd3a663de65d30ba497bd46c696cc1e248c72b13d6d567138a4fc7
   languageName: node
   linkType: hard
 
@@ -3665,7 +3653,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ignore@npm:^5.1.1, ignore@npm:^5.2.0":
+"ignore@npm:^5.2.0":
   version: 5.2.0
   resolution: "ignore@npm:5.2.0"
   checksum: 6b1f926792d614f64c6c83da3a1f9c83f6196c2839aa41e1e32dd7b8d174cef2e329d75caabb62cb61ce9dc432f75e67d07d122a037312db7caa73166a1bdb77
@@ -3901,7 +3889,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-path-inside@npm:^3.0.1, is-path-inside@npm:^3.0.2":
+"is-path-inside@npm:^3.0.2":
   version: 3.0.3
   resolution: "is-path-inside@npm:3.0.3"
   checksum: abd50f06186a052b349c15e55b182326f1936c89a78bf6c8f2b707412517c097ce04bc49a0ca221787bc44e1049f51f09a2ffb63d22899051988d3a618ba13e9
@@ -4871,7 +4859,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"merge2@npm:^1.2.3, merge2@npm:^1.3.0":
+"merge2@npm:^1.3.0, merge2@npm:^1.4.1":
   version: 1.4.1
   resolution: "merge2@npm:1.4.1"
   checksum: 7268db63ed5169466540b6fb947aec313200bcf6d40c5ab722c22e242f651994619bcd85601602972d3c85bd2cc45a358a4c61937e9f11a061919a1da569b0c2
@@ -5253,15 +5241,6 @@ __metadata:
   dependencies:
     p-limit: ^3.0.2
   checksum: 1623088f36cf1cbca58e9b61c4e62bf0c60a07af5ae1ca99a720837356b5b6c5ba3eb1b2127e47a06865fee59dd0453cad7cc844cda9d5a62ac1a5a51b7c86d3
-  languageName: node
-  linkType: hard
-
-"p-map@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "p-map@npm:3.0.0"
-  dependencies:
-    aggregate-error: ^3.0.0
-  checksum: 49b0fcbc66b1ef9cd379de1b4da07fa7a9f84b41509ea3f461c31903623aaba8a529d22f835e0d77c7cb9fcc16e4fae71e308fd40179aea514ba68f27032b5d5
   languageName: node
   linkType: hard
 
@@ -5699,7 +5678,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
+"rimraf@npm:^3.0.2":
   version: 3.0.2
   resolution: "rimraf@npm:3.0.2"
   dependencies:
@@ -5718,13 +5697,13 @@ __metadata:
   linkType: hard
 
 "rollup-plugin-delete@npm:^2.0.0":
-  version: 2.1.0
-  resolution: "rollup-plugin-delete@npm:2.1.0"
+  version: 2.2.0
+  resolution: "rollup-plugin-delete@npm:2.2.0"
   dependencies:
-    del: ^5.1.0
+    del: ^6.1.1
   peerDependencies:
     rollup: "*"
-  checksum: cff953a05b0fe962da8843eab721d0f61e546f08f3bb33d2c268aeaba329855dbd2a4ca467b026045d263ad4250cd875e64269b550987dad633648dc81437ced
+  checksum: b8907dd666ed86f6555c57071322d20515446292d1eef93e109c7db1dd0d83f5a87b55b60e74e1482d5804331854d56c98c15607ea7025400f8304f82dd2d38b
   languageName: node
   linkType: hard
 
