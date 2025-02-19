@@ -61,7 +61,7 @@
     "prettier": "3.5.1",
     "rollup": "^4.0.0",
     "rollup-plugin-build-statistics": "^0.0.19",
-    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-delete": "^3.0.0",
     "rollup-plugin-preserve-shebang": "^1.0.1",
     "rollup-plugin-shebang": "^0.1.5",
     "ts-jest": "^29.0.0",
