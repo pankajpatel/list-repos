@@ -73,5 +73,5 @@
       "prettier --ignore-unknown --write"
     ]
   },
-  "packageManager": "yarn@3.6.3"
+  "packageManager": "yarn@4.9.1"
 }
