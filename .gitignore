@@ -42,9 +42,4 @@ stats
 # If you're using Zero-Installs:
 # https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
 .yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
 !.yarn/releases
-!.yarn/sdks
-!.yarn/versions
