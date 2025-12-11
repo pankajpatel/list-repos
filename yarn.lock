@@ -2929,17 +2929,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"del@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "del@npm:8.0.0"
+"del@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "del@npm:8.0.1"
   dependencies:
     globby: "npm:^14.0.2"
     is-glob: "npm:^4.0.3"
     is-path-cwd: "npm:^3.0.0"
     is-path-inside: "npm:^4.0.0"
     p-map: "npm:^7.0.2"
+    presentable-error: "npm:^0.0.1"
     slash: "npm:^5.1.0"
-  checksum: 10c0/dd9099dc245173caad16a6372c7c9eb316e19e75e7bebfdce86ee59572c2591be5e569e15e8768108bb451f5319c57407cfa7adf74424f150d4d29c7f6da5601
+  checksum: 10c0/77100f260e6b5bd2a927fe4a770b321c088aa15ce9c8266b9f0297a85613c225913e52fc78150ea701b163d0d9c9fec945107fef0e23836747a57a7d3709fb1c
   languageName: node
   linkType: hard
 
@@ -5546,6 +5547,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"presentable-error@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "presentable-error@npm:0.0.1"
+  checksum: 10c0/84a0ef6f2c34fbb1ee006b803b9e6df52886b39ae431f0359364f8a8b74b41ca98976217fdced80bf56a9dee05fa2b456cbb57323cfc3e135bce8825ec5e8650
+  languageName: node
+  linkType: hard
+
 "prettier-linter-helpers@npm:^1.0.0":
   version: 1.0.0
   resolution: "prettier-linter-helpers@npm:1.0.0"
@@ -5796,13 +5804,13 @@ __metadata:
   linkType: hard
 
 "rollup-plugin-delete@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "rollup-plugin-delete@npm:3.0.1"
+  version: 3.0.2
+  resolution: "rollup-plugin-delete@npm:3.0.2"
   dependencies:
-    del: "npm:^8.0.0"
+    del: "npm:^8.0.1"
   peerDependencies:
     rollup: "*"
-  checksum: 10c0/2fff62ade534307385f160e28f0b8c036ef884ae0a62a96ece0f8c79b7ae9ab965855528d590838679e89d27c301dd3dfa51dafd778ce7856d9d930e80d644bf
+  checksum: 10c0/c8a3c8c4468d0219c831347d2110033839e4e6730203160a58a68956d4d1ade5e01bb8f70bba7c96f430d22b2715fbc5b569e62af1eb7fb72bf9a6add685846f
   languageName: node
   linkType: hard
 
