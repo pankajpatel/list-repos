@@ -1933,10 +1933,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/configstore@npm:*":
-  version: 5.0.1
-  resolution: "@types/configstore@npm:5.0.1"
-  checksum: 10c0/a15647f7dee36c6fc415a764f5983fc458c311b3c5e2a91469340ac06b54bbb3318f04f5e668dce09469475092eba6e573ac856327bfd558d9ba2b95437d501a
+"@types/configstore@npm:^6":
+  version: 6.0.2
+  resolution: "@types/configstore@npm:6.0.2"
+  checksum: 10c0/e38020663d0693122e90d30c17024d4cdbd6e0cd44ff8188cbf5df140c98964a0017386aff8053ff7816f58a9f2fce71d5c060fb4451bc6b132b8011f1e6a224
   languageName: node
   linkType: hard
 
@@ -2053,12 +2053,12 @@ __metadata:
   linkType: hard
 
 "@types/update-notifier@npm:^6.0.0":
-  version: 6.0.8
-  resolution: "@types/update-notifier@npm:6.0.8"
+  version: 6.0.9
+  resolution: "@types/update-notifier@npm:6.0.9"
   dependencies:
-    "@types/configstore": "npm:*"
+    "@types/configstore": "npm:^6"
     boxen: "npm:^7.1.1"
-  checksum: 10c0/487f119d96ee90fd3070de9ae4773704522bc5bdced67debbc1feb32d690bfa6b44840b57c0eccbeb9fbff40a9ea459fe6acff37fcab102d8e3a6c6d6158455f
+  checksum: 10c0/8cc21e1c95e177e21f36c4bb3eda4b168366e7ad7b819f1bab7d10487b4da22a11d683429b23fe4ef184be163b81be4669c7232052b6480adfe85bd7138f3d46
   languageName: node
   linkType: hard
 
